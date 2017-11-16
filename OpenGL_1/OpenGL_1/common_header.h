@@ -14,6 +14,7 @@
 using namespace std;
 
 #include <gl/glew.h>
+#include <GL/freeglut.h>
 
 // Some useful defines
 
