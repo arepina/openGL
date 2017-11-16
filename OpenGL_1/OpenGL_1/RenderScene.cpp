@@ -6,14 +6,14 @@
 
 
 //Repina Anastasia BSE143. HW7. 12.11.2017
-//Drawing the triangle, quad, tree, star and boat using OpenGL. Each object has its own init and setup methods.
+//Drawing the triangle, quad, tree, star, sun and boat using OpenGL. Each object has its own init and setup methods.
 
 float fTriangle[9]; // Data to render triangle (3 vertices, each has 3 floats)
 float fQuad[12]; // Data to render quad using triangle strips (4 vertices, each has 3 floats)
 float fBoat[12]; 
 float fMast[12];
 float fCanvas[9];
-float fSun[365];
+float fSun[2166];
 float fStar[33];
 float fTree[27];
 float fTreeRoot[12];
@@ -22,13 +22,13 @@ float fQuadColor[12];
 float fBoatColor[12];
 float fMastColor[12];
 float fCanvasColor[9];
-float fSunColor[365];
+float fSunColor[2166];
 float fStarColor[33];
 float fTreeColor[27];
 float fTreeRootColor[12];
 
-UINT uiVBO[16];
-UINT uiVAO[8];
+UINT uiVBO[18];
+UINT uiVAO[9];
 
 CShader shVertex, shFragment;
 CShaderProgram spMain;
@@ -36,9 +36,9 @@ CShaderProgram spMain;
 void initTriangle()
 {
 	// Setup triangle vertices
-	fTriangle[0] = -1.0f; fTriangle[1] = 0.7f; fTriangle[2] = 0.0f;
-	fTriangle[3] = -0.6f; fTriangle[4] = 0.7f; fTriangle[5] = 0.0f;
-	fTriangle[6] = -0.8f; fTriangle[7] = 1.0f; fTriangle[8] = 0.0f;
+	fTriangle[0] = -0.45f; fTriangle[1] = 0.7f; fTriangle[2] = 0.0f;
+	fTriangle[3] = -0.05f; fTriangle[4] = 0.7f; fTriangle[5] = 0.0f;
+	fTriangle[6] = -0.25f; fTriangle[7] = 1.0f; fTriangle[8] = 0.0f;
 
 	// Setup triangle color
 
@@ -51,10 +51,10 @@ void initQuad()
 {
 	// Setup quad vertices
 
-	fQuad[0] = -0.9f; fQuad[1] = 0.4f; fQuad[2] = 0.0f;
-	fQuad[3] = -0.9f; fQuad[4] = 0.7f; fQuad[5] = 0.0f;
-	fQuad[6] = -0.7f; fQuad[7] = 0.4f; fQuad[8] = 0.0f;
-	fQuad[9] = -0.7f; fQuad[10] = 0.7f; fQuad[11] = 0.0f;
+	fQuad[0] = -0.4f; fQuad[1] = 0.4f; fQuad[2] = 0.0f;
+	fQuad[3] = -0.4f; fQuad[4] = 0.7f; fQuad[5] = 0.0f;
+	fQuad[6] = -0.1f; fQuad[7] = 0.4f; fQuad[8] = 0.0f;
+	fQuad[9] = -0.1f; fQuad[10] = 0.7f; fQuad[11] = 0.0f;
 
 	// Setup quad color
 
@@ -112,25 +112,6 @@ void initCanvas()
 	fCanvasColor[6] = 1.0f; fCanvasColor[7] = 0.0f; fCanvasColor[8] = 0.0f;
 }
 
-void initSun()
-{
-	float angle = 0;
-	float rad = 0.2f;
-	const float PI = 3.1415926f;
-	int n = 365;
-	for (int i = 0; i <= n - 3; i++)
-	{
-		fSun[i] = rad * cos(angle);
-		fSun[i + 1] = rad * sin(angle);
-		fSun[i + 2] = 0.0f;
-		fSunColor[i] = 0.0f;
-		fSunColor[i + 1] = 1.0f;
-		fSunColor[i + 2] = 0.0f;
-		// update to next angle
-		angle += PI * 2 / n;
-	}
-}
-
 void initStar()
 {
 	// Setup star vertices
@@ -165,15 +146,15 @@ void initStar()
 void initTree()
 {
 	// Setup tree vertices
-	fTree[0] = 0.5f; fTree[1] = 0.7f; fTree[2] = 0.0f;
-	fTree[3] = 0.7f; fTree[4] = 0.7f; fTree[5] = 0.0f;
-	fTree[6] = 0.6f; fTree[7] = 1.0f; fTree[8] = 0.0f;
-	fTree[9] = 0.5f; fTree[10] = 0.4f; fTree[11] = 0.0f;
-	fTree[12] = 0.7f; fTree[13] = 0.4f; fTree[14] = 0.0f;
-	fTree[15] = 0.6f; fTree[16] = 0.7f; fTree[17] = 0.0f;
-	fTree[18] = 0.5f; fTree[19] = 0.1f; fTree[20] = 0.0f;
-	fTree[21] = 0.7f; fTree[22] = 0.1f; fTree[23] = 0.0f;
-	fTree[24] = 0.6f; fTree[25] = 0.4f; fTree[26] = 0.0f;
+	fTree[0] = 0.5f; fTree[1] = 0.4f; fTree[2] = 0.0f;
+	fTree[3] = 0.7f; fTree[4] = 0.4f; fTree[5] = 0.0f;
+	fTree[6] = 0.6f; fTree[7] = 0.7f; fTree[8] = 0.0f;
+	fTree[9] = 0.5f; fTree[10] = 0.1f; fTree[11] = 0.0f;
+	fTree[12] = 0.7f; fTree[13] = 0.1f; fTree[14] = 0.0f;
+	fTree[15] = 0.6f; fTree[16] = 0.4f; fTree[17] = 0.0f;
+	fTree[18] = 0.5f; fTree[19] = -0.2f; fTree[20] = 0.0f;
+	fTree[21] = 0.7f; fTree[22] = -0.2f; fTree[23] = 0.0f;
+	fTree[24] = 0.6f; fTree[25] = 0.1f; fTree[26] = 0.0f;
 
 	// Setup tree color
 
@@ -192,10 +173,10 @@ void initTreeRoot()
 {
 	// Setup tree root vertices
 
-	fTreeRoot[0] = 0.55f; fTreeRoot[1] = 0.1f; fTreeRoot[2] = 0.0f;
-	fTreeRoot[3] = 0.55f; fTreeRoot[4] = 0.0f; fTreeRoot[5] = 0.0f;
-	fTreeRoot[6] = 0.65f; fTreeRoot[7] = 0.1f; fTreeRoot[8] = 0.0f;
-	fTreeRoot[9] = 0.65f; fTreeRoot[10] = 0.0f; fTreeRoot[11] = 0.0f;
+	fTreeRoot[0] = 0.55f; fTreeRoot[1] = -0.2f; fTreeRoot[2] = 0.0f;
+	fTreeRoot[3] = 0.55f; fTreeRoot[4] = -0.3f; fTreeRoot[5] = 0.0f;
+	fTreeRoot[6] = 0.65f; fTreeRoot[7] = -0.2f; fTreeRoot[8] = 0.0f;
+	fTreeRoot[9] = 0.65f; fTreeRoot[10] = -0.3f; fTreeRoot[11] = 0.0f;
 
 	// Setup tree root color
 
@@ -203,6 +184,30 @@ void initTreeRoot()
 	fTreeRootColor[3] = 0.4f; fTreeRootColor[4] = 0.4f; fTreeRootColor[8] = 0.0f;
 	fTreeRootColor[6] = 0.4f; fTreeRootColor[7] = 0.4f; fTreeRootColor[5] = 0.0f;
 	fTreeRootColor[9] = 0.4f; fTreeRootColor[10] = 0.4f; fTreeRootColor[11] = 0.0f;
+}
+
+void initSun()
+{
+	float rad = 0.2f;
+	float x = 0.4f;
+	float y = 0.7f;
+	fSun[0] = x;
+	fSun[1] = y;
+	fSun[2] = 0.0f;
+	fSunColor[0] = 1.0f;
+	fSunColor[1] = 1.0f;
+	fSunColor[2] = 0.0f;
+	int i = 3;
+	for(float angle = 0;angle <= 360;angle+=0.5)
+	{
+		fSun[i] = x + rad * cos(angle * 3.14f / 180.f) / 2.f;
+		fSun[i + 1] = y + rad * sin(angle* 3.14f / 180.f);
+		fSun[i + 2] = 0.0f;
+		fSunColor[i] = 1.0f;
+		fSunColor[i + 1] = 1.0f;
+		fSunColor[i + 2] = 0.0f;
+		i += 3;
+	}
 }
 
 void setupTriangle()
@@ -288,31 +293,15 @@ void setupCanvas()
 void setupSun()
 {
 	// Setup whole sun
-	glBindVertexArray(uiVAO[8]);
-
-	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[16]);
-	glBufferData(GL_ARRAY_BUFFER, 365 * sizeof(float), fSun, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[17]);
-	glBufferData(GL_ARRAY_BUFFER, 365 * sizeof(float), fSunColor, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-}
-
-void setupStar()
-{
-	// Setup whole sun
 	glBindVertexArray(uiVAO[5]);
 
 	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[10]);
-	glBufferData(GL_ARRAY_BUFFER, 33 * sizeof(float), fStar, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 2166 * sizeof(float), fSun, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[11]);
-	glBufferData(GL_ARRAY_BUFFER, 33 * sizeof(float), fStarColor, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 2166 * sizeof(float), fSunColor, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 }
@@ -349,6 +338,21 @@ void setupTreeRoot()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 }
 
+void setupStar()
+{
+	// Setup whole star
+	glBindVertexArray(uiVAO[8]);
+
+	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[16]);
+	glBufferData(GL_ARRAY_BUFFER, 33 * sizeof(float), fStar, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, uiVBO[17]);
+	glBufferData(GL_ARRAY_BUFFER, 33 * sizeof(float), fStarColor, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+}
 
 // Initializes OpenGL features that will be used.
 // lpParam - Pointer to anything you want.
@@ -361,23 +365,23 @@ void InitScene(LPVOID lpParam)
 	initBoat();
 	initMast();
 	initCanvas();
-	initStar();
+	initSun();
 	initTree();
 	initTreeRoot();
-	//initSun();
+	initStar();
 
-	glGenVertexArrays(8, uiVAO); 
-	glGenBuffers(16, uiVBO);
+	glGenVertexArrays(9, uiVAO); 
+	glGenBuffers(18, uiVBO);
 
 	setupTriangle();
 	setupQuad();
 	setupBoat();
 	setupMast();
 	setupCanvas();
-	setupStar();
+	setupSun();
 	setupTree();
 	setupTreeRoot();
-	//setupSun();
+	setupStar();
 
 	// Load shaders and create shader program
 
@@ -418,20 +422,20 @@ void RenderScene(LPVOID lpParam)
 	glBindVertexArray(uiVAO[4]);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
-	//glBindVertexArray(uiVAO[7]);
-	//glDrawArrays(GL_LINE_STRIP, 0, 365);
-
 	glBindVertexArray(uiVAO[5]);
-	glDrawArrays(GL_LINE_STRIP, 0, 33);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 722);
 
 	glBindVertexArray(uiVAO[6]);
-	glDrawArrays(GL_TRIANGLES, 0, 27);
+	glDrawArrays(GL_TRIANGLES, 0, 9);
 	
 	glBindVertexArray(uiVAO[7]);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4) ;
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+	glBindVertexArray(uiVAO[8]);
+	glDrawArrays(GL_LINE_STRIP, 0, 11);
+
 
 	oglControl->SwapBuffersM();
-
 }
 
 // Releases OpenGL scene.
