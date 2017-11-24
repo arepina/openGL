@@ -22,8 +22,8 @@ in this tutorial vertex is stored as 3 floats for
 position, 2 floats for texture coordinate and
 3 floats for normal vector. */
 
-CVertexBufferObject vboSceneObjects, vboCubeInd, vboCube;
-UINT uiVAOs[2]; // Only one VAO now
+CVertexBufferObject vboSceneObjects, vboCubeInd, vboCube, vboPyramid, vboPyramidInd;
+UINT uiVAOs[3]; // Only one VAO now
 
 CTexture tTextures[NUMTEXTURES];
 CFlyingCamera cCamera;
@@ -34,16 +34,8 @@ CDirectionalLight dlSun;
 
 #include "static_geometry.h"
 
-// Initializes OpenGL features that will be used.
-// lpParam - Pointer to anything you want.
-void InitScene(LPVOID lpParam)
+void InitStaticObjects()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Prepare all scene objects
-
-	vboSceneObjects.CreateVBO();
-	glGenVertexArrays(2, uiVAOs); // Create one VAO
 	glBindVertexArray(uiVAOs[0]);
 
 	vboSceneObjects.BindVBO();
@@ -54,14 +46,18 @@ void InitScene(LPVOID lpParam)
 
 	// Vertex positions
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), 0);
 	// Texture coordinates
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), (void*)sizeof(glm::vec3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
 	// Normal vectors
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), (void*)(sizeof(glm::vec3)+sizeof(glm::vec2)));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
 
+}
+
+void InitCube()
+{
 	glBindVertexArray(uiVAOs[1]);
 
 	vboCube.CreateVBO();
@@ -83,34 +79,82 @@ void InitScene(LPVOID lpParam)
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
 	// Normal vectors
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
+	//glEnableVertexAttribArray(2);
+	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
+}
 
-	if(!PrepareShaderPrograms())
-	{
-		PostQuitMessage(0);
-		return;
-	}
-	// Load textures
+void InitPyramid()
+{
+	/*glBindVertexArray(uiVAOs[2]);
 
-	string sTextureNames[] = {"grass.png", "met_wall01a.jpg", "tower.jpg", "box.jpg", "ground.jpg"};
+	vboPyramid.CreateVBO();
+
+	vboPyramid.BindVBO();
+	AddPyramid(vboPyramid);
+	vboPyramid.UploadDataToGPU(GL_STATIC_DRAW);
+
+	vboPyramidInd.CreateVBO();
+	// Bind indices
+	vboPyramidInd.BindVBO(GL_ELEMENT_ARRAY_BUFFER);
+	vboPyramidInd.AddData(&iPyramidindices, sizeof(iPyramidindices));
+	vboPyramidInd.UploadDataToGPU(GL_STATIC_DRAW);
+
+	// Vertex positions
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), 0);
+	// Texture coordinates
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
+	// Normal vectors
+	//glEnableVertexAttribArray(2);
+	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));*/
+}
+
+void LoadTextures()
+{
+	string sTextureNames[] = { "snow.bmp", "wall.jpg", "tower.jpg", "box.jpg", "ground.jpg" };
 
 	FOR(i, NUMTEXTURES)
 	{
-		tTextures[i].LoadTexture2D("data\\textures\\"+sTextureNames[i], true);
+		tTextures[i].LoadTexture2D("data\\textures\\" + sTextureNames[i], true);
 		tTextures[i].SetFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP);
 	}
 
 	glEnable(GL_DEPTH_TEST);
 	glClearDepth(1.0);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	
+
 	cCamera = CFlyingCamera(glm::vec3(0.0f, 10.0f, 120.0f), glm::vec3(0.0f, 10.0f, 119.0f), glm::vec3(0.0f, 1.0f, 0.0f), 25.0f, 0.001f);
 	cCamera.SetMovingKeys('W', 'S', 'A', 'D');
 
-	sbMainSkybox.LoadSkybox("data\\skyboxes\\jajlands1\\", "jajlands1_ft.jpg", "jajlands1_bk.jpg", "jajlands1_lf.jpg", "jajlands1_rt.jpg", "jajlands1_up.jpg", "jajlands1_dn.jpg");
+	sbMainSkybox.LoadSkybox("data\\skyboxes\\", "snowalps_ft.png", "snowalps_bk.png", "snowalps_lf.png", "snowalps_rt.png", "snowalps_up.png", "snowalps_dn.png");
 
 	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);
+}
+
+// Initializes OpenGL features that will be used.
+// lpParam - Pointer to anything you want.
+void InitScene(LPVOID lpParam)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	vboSceneObjects.CreateVBO();
+	glGenVertexArrays(3, uiVAOs); // Create one VAO
+
+
+	// Prepare all scene objects
+	InitStaticObjects();
+	InitCube();
+	InitPyramid();
+
+	if (!PrepareShaderPrograms())
+	{
+		PostQuitMessage(0);
+		return;
+	}
+
+	// Load textures
+	LoadTextures();
 }
 
 float fGlobalAngle;
@@ -128,7 +172,7 @@ void RenderScene(LPVOID lpParam)
 
 	glm::mat4 mModelMatrix, mView;
 
-	glm::vec3 vCameraDir = glm::normalize(cCamera.vView-cCamera.vEye);
+	glm::vec3 vCameraDir = glm::normalize(cCamera.vView - cCamera.vEye);
 
 	oglControl->ResizeOpenGLViewportFull();
 
@@ -147,7 +191,7 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetUniform("matrices.viewMatrix", &mView);
 
 	mModelMatrix = glm::translate(glm::mat4(1.0f), cCamera.vEye);
-	
+
 	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
 	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mView*mModelMatrix)));
 
@@ -195,8 +239,7 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetUniform("matrices.modelMatrix", glm::mat4(1.0f));
 	spMain.SetUniform("matrices.normalMatrix", glm::mat4(1.0f));
 
-
-	// Render ground
+	// render ground
 	tTextures[0].BindTexture();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -217,6 +260,10 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
 	glDrawArrays(GL_TRIANGLES, 6 + iTorusFaces * 3, iTorusFaces2 * 3);
 
+	// render cylinder
+	tTextures[3].BindTexture();
+	glDrawArrays(GL_TRIANGLES, 6 + iCylinderFaces * 3, iCylinderFaces * 3);
+
 	cCamera.Update();
 
 	glEnable(GL_DEPTH_TEST);
@@ -225,7 +272,7 @@ void RenderScene(LPVOID lpParam)
 	if (Keys::Key('E')) fTextureContribution += appMain.sof(0.2f);
 	fTextureContribution = min(max(0.0f, fTextureContribution), 1.0f);
 
-	if(Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
+	if (Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
 	fGlobalAngle += appMain.sof(1.0f);
 	oglControl->SwapBuffers();
 }
@@ -239,7 +286,7 @@ void ReleaseScene(LPVOID lpParam)
 	spMain.DeleteProgram();
 	FOR(i, NUMSHADERS)shShaders[i].DeleteShader();
 
-	glDeleteVertexArrays(2, uiVAOs);
+	glDeleteVertexArrays(3, uiVAOs);
 	vboSceneObjects.DeleteVBO();
 	vboCubeInd.DeleteVBO();
 	vboCube.DeleteVBO();

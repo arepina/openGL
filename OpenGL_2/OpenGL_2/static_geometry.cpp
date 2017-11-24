@@ -148,6 +148,7 @@ int GenerateCylinder(CVertexBufferObject &vboDest, float fRadius, float fHeight,
 	return iFacesAdded;
 }
 
+#pragma region Cube
 //glm::vec3 vCubeVertices[36] = 
 //{
 //	// Front face
@@ -206,7 +207,6 @@ glm::vec3 vCubeVertices2[8] =
 	//glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(-0.5f, -0.5f, 0.5f),
 };
 
-
 unsigned int iCubeindices[36] =
 {
 	0, 2, 1, 1, 2, 3, // front
@@ -216,7 +216,9 @@ unsigned int iCubeindices[36] =
 	0, 6, 4, 0, 4, 2, // top
 	1, 5, 7, 1, 3, 5 // bottom
 };
+
 glm::vec2 vCubeTexCoords[6] = {glm::vec2(0.0f, 1.0f), glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(0.0f, 0.0f), glm::vec2(0.0f, 1.0f)};
+
 glm::vec2 vCubeTexCoords2[4] = { glm::vec2(0.0f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(1.0f, 0.0f) };
 
 glm::vec3 vCubeNormals[6] = 
@@ -228,13 +230,40 @@ glm::vec3 vCubeNormals[6] =
 	glm::vec3(0.0f, 1.0f, 0.0f),
 	glm::vec3(0.0f, -1.0f, 0.0f)
 };
+#pragma endregion Cube
+
+#pragma region Pyramid
+glm::vec3 vPyramidVertices[16] =
+{
+	// Front face
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.5f, -0.5f, 0.5f),
+	// Back face
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(-0.5f, -0.5f, -0.5f),
+	// Left face
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-0.5f, -0.5f, 0.5f),
+	// Right face
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.5f, -0.5f, -0.5f)
+};
+
+glm::vec2 vPyramidTexCoords[3] = { glm::vec2(0.5f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f) };
+
+glm::vec3 vPyramid[12] =
+{
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f),
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(-0.5f, -0.5f, -0.5f),
+	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, -0.5f, 0.0f),
+	glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(-0.5f, -0.5f, -0.0f), glm::vec3(-0.5f, -0.5f, 0.0f)
+};
+
+glm::vec2 vPyramid3TexCoords[3] = { glm::vec2(0.5f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f) };
+#pragma endregion Pyramid
 
 glm::vec3 vGround[6] = 
 {
 	glm::vec3(-1000, 0, -1000), glm::vec3(-1000, 0, 1000), glm::vec3(1000, 0, 1000), glm::vec3(1000, 0, 1000), glm::vec3(1000, 0, -1000), glm::vec3(-1000, 0, -1000)
 };
 
-int iTorusFaces, iTorusFaces2;
+int iTorusFaces, iTorusFaces2, iCylinderFaces;
 
 // Adds all static objects to scene.
 // vboDest - VBO where to store objects
@@ -252,6 +281,7 @@ void AddSceneObjects(CVertexBufferObject& vboDest)
 
 	iTorusFaces = GenerateTorus(vboDest, 7.0f, 2.0f, 20, 20);
 	iTorusFaces2 = GenerateTorus(vboDest, 3.0f, 1.0f, 20, 20);
+	iCylinderFaces = GenerateCylinder(vboDest, 1.f, 1.f, 20);
 }
 
 // Adds all static objects to scene.
@@ -266,4 +296,31 @@ void AddCube(CVertexBufferObject& vboDest)
 		vboDest.AddData(&vCubeTexCoords2[i % 4], sizeof(glm::vec2));
 		vboDest.AddData(&vCubeNormals[i / 4], sizeof(glm::vec3));
 	}
+}
+
+void AddPyramid(CVertexBufferObject & vboDest)
+{
+	// Add pyramid to VBO
+
+	FOR(i, 12)
+	{
+		vboDest.AddData(&vPyramidVertices[i], sizeof(glm::vec3));
+		vboDest.AddData(&vPyramidTexCoords[i % 3], sizeof(glm::vec2));
+	}
+
+	FOR(i, 6)
+	{
+		vboDest.AddData(&vGround[i], sizeof(glm::vec3));
+		vCubeTexCoords[i] *= 5.0f;
+		vboDest.AddData(&vCubeTexCoords[i % 6], sizeof(glm::vec2));
+	}
+
+	// Add my pyramid to VBO
+
+	FOR(i, 12)
+	{
+		vboDest.AddData(&vPyramid[i], sizeof(glm::vec3));
+		vboDest.AddData(&vPyramidTexCoords[i % 3], sizeof(glm::vec2));
+	}
+
 }

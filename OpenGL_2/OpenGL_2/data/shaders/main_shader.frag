@@ -26,4 +26,5 @@ void main()
 		 vMixedTexColor += vTexColor2*fTextureContributions[1];
 	vec4 vDirLightColor = getDirectionalLightColor(sunLight, vNormal);
 	outputColor = vColor*vMixedTexColor*vDirLightColor;
+// outputColor = vColor*vMixedTexColor; //*vDirLightColor;
 }
