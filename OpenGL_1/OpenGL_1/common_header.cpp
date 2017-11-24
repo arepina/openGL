@@ -1,5 +1,4 @@
-/*
-#pragma comment (lib, "opengl32.lib")
+/*#pragma comment (lib, "opengl32.lib")
 #pragma comment (lib, "glu32.lib")
 #pragma comment(lib, "glew32.lib")
 
@@ -18,11 +17,6 @@
 
 using namespace std;
 
-void display(void)
-{
-	InitScene;
-	RenderScene;
-}
 
 void reshape(int w, int h)
 {
@@ -36,16 +30,21 @@ void reshape(int w, int h)
 	glLoadIdentity();
 }
 
+void display()
+{
+	RenderScene;
+}
+
 void main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
 	glutInitWindowSize(1350, 700);
 	glutInitWindowPosition(0, 0);
-	//glutFullScreen();
 	glutCreateWindow("Repina Anastasia BSE143 HW7");
-	glutReshapeFunc(reshape);
+	InitScene;
 	glutDisplayFunc(display);
+	glutReshapeFunc(reshape);
 
 	glutMainLoop();
 }*/

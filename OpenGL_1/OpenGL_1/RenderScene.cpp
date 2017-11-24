@@ -160,13 +160,13 @@ void initTree()
 
 	fTreeColor[0] = 0.0f; fTreeColor[1] = 1.0f; fTreeColor[2] = 0.0f;
 	fTreeColor[3] = 0.0f; fTreeColor[4] = 1.0f; fTreeColor[5] = 0.0f;
-	fTreeColor[6] = 0.0f; fTreeColor[7] = 1.0f; fTreeColor[8] = 0.0f;
+	fTreeColor[6] = 0.0f; fTreeColor[7] = 1.0f; fTreeColor[8] = 0.9f;
 	fTreeColor[9] = 0.0f; fTreeColor[10] = 1.0f; fTreeColor[11] = 0.0f;
 	fTreeColor[12] = 0.0f; fTreeColor[13] = 1.0f; fTreeColor[14] = 0.0f;
-	fTreeColor[15] = 0.0f; fTreeColor[16] = 1.0f; fTreeColor[17] = 0.0f;
+	fTreeColor[15] = 0.0f; fTreeColor[16] = 1.0f; fTreeColor[17] = 0.9f;
 	fTreeColor[18] = 0.0f; fTreeColor[19] = 1.0f; fTreeColor[20] = 0.0f;
 	fTreeColor[21] = 0.0f; fTreeColor[22] = 1.0f; fTreeColor[23] = 0.0f;
-	fTreeColor[24] = 0.0f; fTreeColor[25] = 1.0f; fTreeColor[26] = 0.0f;
+	fTreeColor[24] = 0.0f; fTreeColor[25] = 1.0f; fTreeColor[26] = 0.9f;
 }
 
 void initTreeRoot()
