@@ -112,7 +112,7 @@ void InitPyramid()
 
 void LoadTextures()
 {
-	string sTextureNames[] = { "snow.bmp", "wall.jpg", "tower.jpg", "box.jpg", "ground.jpg" };
+	string sTextureNames[] = { "snow.bmp", "medvedev.jpg", "tower.jpg", "putin.jpg", "ground.jpg" };
 
 	FOR(i, NUMTEXTURES)
 	{
@@ -158,7 +158,7 @@ void InitScene(LPVOID lpParam)
 }
 
 float fGlobalAngle;
-float fTextureContribution = 0.5f;
+float fTextureContribution = 1.f;
 // Renders whole scene.
 // lpParam - Pointer to anything you want.
 void RenderScene(LPVOID lpParam)
@@ -204,18 +204,15 @@ void RenderScene(LPVOID lpParam)
 	dlSun2.SetUniformData(&spMain, "sunLight");
 
 	sbMainSkybox.RenderSkybox();
+
+	// Render cube
 	glBindVertexArray(uiVAOs[1]);
-	// Render cubes
 	glm::mat4 mModelToCamera;
-
-	tTextures[3].BindTexture();
-	tTextures[1].BindTexture(1);
-
+	tTextures[1].BindTexture(1);//medvedev
+	tTextures[3].BindTexture();//putin
 	spMain.SetUniform("fTextureContributions[0]", 1.0f - fTextureContribution);
 	spMain.SetUniform("numTextures", 2);
-
 	float PI = float(atan(1.0)*4.0);
-
 	glEnable(GL_CULL_FACE);
 	//glFrontFace(GL_CCW); //Done by default
 	glm::vec3 vPos2 = glm::vec3(30.0f, 8.0f, 0.0f);
@@ -228,23 +225,19 @@ void RenderScene(LPVOID lpParam)
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
 	glDisable(GL_CULL_FACE);
 
+	// render ground
 	spMain.SetUniform("fTextureContributions[0]", 1.0f);
 	spMain.SetUniform("numTextures", 1);
-
 	glBindVertexArray(uiVAOs[0]);
-
 	dlSun.SetUniformData(&spMain, "sunLight");
-
 	spMain.SetUniform("vColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	spMain.SetUniform("matrices.modelMatrix", glm::mat4(1.0f));
 	spMain.SetUniform("matrices.normalMatrix", glm::mat4(1.0f));
-
-	// render ground
-	tTextures[0].BindTexture();
+	tTextures[0].BindTexture();//snow
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
 	// render torus
-	tTextures[1].BindTexture();
+	tTextures[4].BindTexture();
 	// Now it's gonna float in the air
 	glm::vec3 vPos = glm::vec3(0.0f, 10.0, 0.0f);
 	mModelMatrix = glm::translate(glm::mat4(1.0), vPos);
@@ -261,7 +254,12 @@ void RenderScene(LPVOID lpParam)
 	glDrawArrays(GL_TRIANGLES, 6 + iTorusFaces * 3, iTorusFaces2 * 3);
 
 	// render cylinder
-	tTextures[3].BindTexture();
+	tTextures[2].BindTexture();
+	vPos = glm::vec3(-15.0f, 10.0, 0.0f);
+	mModelMatrix = glm::translate(glm::mat4(1.0), vPos);
+	mModelMatrix = glm::rotate(mModelMatrix, fGlobalAngle, glm::vec3(1.0f, 0.0f, 0.0f));
+	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
+	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
 	glDrawArrays(GL_TRIANGLES, 6 + iCylinderFaces * 3, iCylinderFaces * 3);
 
 	cCamera.Update();
