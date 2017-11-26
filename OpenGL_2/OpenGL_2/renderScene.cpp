@@ -225,10 +225,23 @@ void RenderScene(LPVOID lpParam)
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (void*)0);
 	glDisable(GL_CULL_FACE);
 
-	// render ground
+	// render pyramid
+	glBindVertexArray(uiVAOs[2]); 
+	tTextures[1].BindTexture();
 	spMain.SetUniform("fTextureContributions[0]", 1.0f);
 	spMain.SetUniform("numTextures", 1);
+	mModelMatrix = glm::translate(mModelMatrix, glm::vec3(-10.0f, 5.0f, 0.0f));
+	mModelMatrix = glm::scale(mModelMatrix, glm::vec3(5.0f, 5.0f, 5.0f));
+	mModelMatrix = glm::rotate(mModelMatrix, fGlobalAngle, glm::vec3(0.0f, -1.0f, 0.0f));
+	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
+	spMain.SetUniform("matrices.modelMatrix", mModelMatrix);
+	glDrawArrays(GL_TRIANGLES, 36, 12);
+
+
+	// render ground
 	glBindVertexArray(uiVAOs[0]);
+	spMain.SetUniform("fTextureContributions[0]", 1.0f);
+	spMain.SetUniform("numTextures", 1);
 	dlSun.SetUniformData(&spMain, "sunLight");
 	spMain.SetUniform("vColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	spMain.SetUniform("matrices.modelMatrix", glm::mat4(1.0f));
