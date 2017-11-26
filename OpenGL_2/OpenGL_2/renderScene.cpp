@@ -85,7 +85,7 @@ void InitCube()
 
 void InitPyramid()
 {
-	/*glBindVertexArray(uiVAOs[2]);
+	glBindVertexArray(uiVAOs[2]);
 
 	vboPyramid.CreateVBO();
 
@@ -105,9 +105,6 @@ void InitPyramid()
 	// Texture coordinates
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
-	// Normal vectors
-	//glEnableVertexAttribArray(2);
-	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));*/
 }
 
 void LoadTextures()
@@ -140,7 +137,6 @@ void InitScene(LPVOID lpParam)
 
 	vboSceneObjects.CreateVBO();
 	glGenVertexArrays(3, uiVAOs); // Create one VAO
-
 
 	// Prepare all scene objects
 	InitStaticObjects();
@@ -228,14 +224,12 @@ void RenderScene(LPVOID lpParam)
 	// render pyramid
 	glBindVertexArray(uiVAOs[2]); 
 	tTextures[1].BindTexture();
-	spMain.SetUniform("fTextureContributions[0]", 1.0f);
-	spMain.SetUniform("numTextures", 1);
-	mModelMatrix = glm::translate(mModelMatrix, glm::vec3(-10.0f, 5.0f, 0.0f));
-	mModelMatrix = glm::scale(mModelMatrix, glm::vec3(5.0f, 5.0f, 5.0f));
-	mModelMatrix = glm::rotate(mModelMatrix, fGlobalAngle, glm::vec3(0.0f, -1.0f, 0.0f));
+	vPos2 = glm::vec3(-25.0f, -10.0, 0.0f);
+	mModelMatrix = glm::translate(glm::mat4(1.0), vPos2);
+	mModelMatrix = glm::rotate(mModelMatrix, fGlobalAngle, glm::vec3(1.0f, 0.0f, 0.0f));
 	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
-	spMain.SetUniform("matrices.modelMatrix", mModelMatrix);
-	glDrawArrays(GL_TRIANGLES, 36, 12);
+	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
+	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, (void*)0);
 
 
 	// render ground

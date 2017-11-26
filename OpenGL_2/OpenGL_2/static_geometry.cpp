@@ -233,7 +233,7 @@ glm::vec3 vCubeNormals[6] =
 #pragma endregion Cube
 
 #pragma region Pyramid
-glm::vec3 vPyramidVertices[16] =
+glm::vec3 vPyramidVertices[12] =
 {
 	// Front face
 	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.5f, -0.5f, 0.5f),
@@ -247,15 +247,16 @@ glm::vec3 vPyramidVertices[16] =
 
 glm::vec2 vPyramidTexCoords[3] = { glm::vec2(0.5f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f) };
 
-glm::vec3 vPyramid[12] =
-{
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f),
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(-0.5f, -0.5f, -0.5f),
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(0.5f, -0.5f, 0.0f),
-	glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(-0.5f, -0.5f, -0.0f), glm::vec3(-0.5f, -0.5f, 0.0f)
-};
-
 glm::vec2 vPyramid3TexCoords[3] = { glm::vec2(0.5f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f) };
+
+unsigned int iPyramidindices[18] =
+{
+	0, 1, 2, // front
+	0, 4, 5, // back
+	0, 5, 1, // left
+	0, 2, 4,  // right
+	1, 5, 2, 2, 5, 4 //bottom
+};
 #pragma endregion Pyramid
 
 glm::vec3 vGround[6] = 
@@ -307,20 +308,4 @@ void AddPyramid(CVertexBufferObject & vboDest)
 		vboDest.AddData(&vPyramidVertices[i], sizeof(glm::vec3));
 		vboDest.AddData(&vPyramidTexCoords[i % 3], sizeof(glm::vec2));
 	}
-
-	FOR(i, 6)
-	{
-		vboDest.AddData(&vGround[i], sizeof(glm::vec3));
-		vCubeTexCoords[i] *= 5.0f;
-		vboDest.AddData(&vCubeTexCoords[i % 6], sizeof(glm::vec2));
-	}
-
-	// Add my pyramid to VBO
-
-	FOR(i, 12)
-	{
-		vboDest.AddData(&vPyramid[i], sizeof(glm::vec3));
-		vboDest.AddData(&vPyramidTexCoords[i % 3], sizeof(glm::vec2));
-	}
-
 }
