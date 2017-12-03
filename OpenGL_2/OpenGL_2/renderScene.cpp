@@ -15,6 +15,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+//Changed the shaders and skybox, added cylinder, cube, 2 thores and pyramide
+
 #define NUMTEXTURES 5
 
 /* One VBO, where all static data are stored now,
@@ -125,6 +127,8 @@ void LoadTextures()
 	cCamera.SetMovingKeys('W', 'S', 'A', 'D');
 
 	sbMainSkybox.LoadSkybox("data\\skyboxes\\", "snowalps_ft.png", "snowalps_bk.png", "snowalps_lf.png", "snowalps_rt.png", "snowalps_up.png", "snowalps_dn.png");
+
+	//sbMainSkybox.LoadSkybox("data\\skyboxes\\", "bloodynight_ft.png", "bloodynight_bk.png", "bloodynight_lf.png", "bloodynight_rt.png", "bloodynight_up.png", "bloodynight_dn.png");
 
 	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);
 }
