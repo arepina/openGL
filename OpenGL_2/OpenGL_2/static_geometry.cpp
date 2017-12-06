@@ -233,29 +233,39 @@ glm::vec3 vCubeNormals[6] =
 #pragma endregion Cube
 
 #pragma region Pyramid
-glm::vec3 vPyramidVertices[12] =
+glm::vec3 vPyramidVertices[5] =
 {
-	// Front face
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, 0.5f), glm::vec3(0.5f, -0.5f, 0.5f),
-	// Back face
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, -0.5f), glm::vec3(-0.5f, -0.5f, -0.5f),
-	// Left face
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(-0.5f, -0.5f, -0.5f), glm::vec3(-0.5f, -0.5f, 0.5f),
-	// Right face
-	glm::vec3(0.0f, 0.5f, 0.0f), glm::vec3(0.5f, -0.5f, 0.5f), glm::vec3(0.5f, -0.5f, -0.5f)
+	/*glm::vec3(0.5f, 0.5f, -0.5f),	
+	glm::vec3(-0.5f, 0.5f, -0.5f),	
+	glm::vec3(-0.5f, -0.5f, -0.5f),	
+	glm::vec3(0.5f, -0.5f, -0.5f),	
+	glm::vec3(0.f, 0.f, 0.5f)	*/
+
+	glm::vec3(0.f, 0.f, 0.f),
+	glm::vec3(0.5f, 0.f, 0.f),
+	glm::vec3(0.f, 0.f, 0.5f),
+	glm::vec3(0.5f, 0.f, 0.5f),
+	glm::vec3(0.25f, 0.5f, 0.25f)
 };
 
-glm::vec2 vPyramidTexCoords[3] = { glm::vec2(0.5f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f) };
+glm::vec2 vPyramidTexCoords[5] = { glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f), glm::vec2(0.5f, 1.0f) };
 
-glm::vec2 vPyramid3TexCoords[3] = { glm::vec2(0.5f, 1.0f), glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f) };
+glm::vec3 vPyramidNormals[5] =
+{
+	glm::vec3(0.57737f, 0.57737f, -0.57737f),	
+	glm::vec3(0.7071f, -0.7071f, 0.0f),			
+	glm::vec3(0.57737f, 0.57737f, 0.57737f),	
+	glm::vec3(-0.7071f, 0.7071f, 0.0f),			
+	glm::vec3(0, 0, 1)						
+};
 
 unsigned int iPyramidindices[18] =
 {
-	0, 1, 2, // front
-	0, 4, 5, // back
-	0, 5, 1, // left
-	0, 2, 4,  // right
-	1, 5, 2, 2, 5, 4 //bottom
+	0, 1, 3, 0, 3, 2, // bottom
+	1, 4, 3, // right
+	3, 4, 2, // front
+	2, 4, 0, // left
+	0, 4, 1 // back
 };
 #pragma endregion Pyramid
 
@@ -303,9 +313,10 @@ void AddPyramid(CVertexBufferObject & vboDest)
 {
 	// Add pyramid to VBO
 
-	FOR(i, 12)
+	FOR(i, 5)
 	{
 		vboDest.AddData(&vPyramidVertices[i], sizeof(glm::vec3));
-		vboDest.AddData(&vPyramidTexCoords[i % 3], sizeof(glm::vec2));
+		vboDest.AddData(&vPyramidTexCoords[i], sizeof(glm::vec2));
+		vboDest.AddData(&vPyramidNormals[i], sizeof(glm::vec3));
 	}
 }

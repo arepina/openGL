@@ -5,10 +5,14 @@
 extern glm::vec3 vCubeVertices[36];
 extern unsigned int iCubeindices[36];
 extern glm::vec2 vCubeTexCoords[6];
+
 extern glm::vec3 vGround[6];
-extern glm::vec3 vPyramidVertices[12];
+
+extern glm::vec3 vPyramidVertices[5];
 extern unsigned int iPyramidindices[18];
-extern glm::vec2 vPyramidTexCoords[3];
+extern glm::vec2 vPyramidTexCoords[5];
+extern glm::vec3 vPyramidNormals[5];
+
 //extern glm::vec3 vCubeNormals[6];
 //extern glm::vec3 vCubeVertices2[24];
 //extern glm::vec3 vCubeVertices2[8];

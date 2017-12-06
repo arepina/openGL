@@ -81,8 +81,8 @@ void InitCube()
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
 	// Normal vectors
-	//glEnableVertexAttribArray(2);
-	//glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
 }
 
 void InitPyramid()
@@ -107,6 +107,9 @@ void InitPyramid()
 	// Texture coordinates
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
+	// Normal vectors
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
 }
 
 void LoadTextures()
@@ -214,7 +217,6 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetUniform("numTextures", 2);
 	float PI = float(atan(1.0)*4.0);
 	glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CCW); //Done by default
 	glm::vec3 vPos2 = glm::vec3(30.0f, 8.0f, 0.0f);
 	mModelMatrix = glm::mat4(1.0f);
 	mModelMatrix = glm::translate(mModelMatrix, vPos2);
@@ -226,15 +228,22 @@ void RenderScene(LPVOID lpParam)
 	glDisable(GL_CULL_FACE);
 
 	// render pyramid
-	glBindVertexArray(uiVAOs[2]); 
-	tTextures[1].BindTexture();
-	vPos2 = glm::vec3(-25.0f, -10.0, 0.0f);
-	mModelMatrix = glm::translate(glm::mat4(1.0), vPos2);
-	mModelMatrix = glm::rotate(mModelMatrix, fGlobalAngle, glm::vec3(1.0f, 0.0f, 0.0f));
+	glBindVertexArray(uiVAOs[2]);
+	tTextures[2].BindTexture(1);
+	tTextures[4].BindTexture();
+	spMain.SetUniform("fTextureContributions[0]", 1.0f - fTextureContribution);
+	spMain.SetUniform("numTextures", 2);
+	float PI2 = float(atan(1.0)*4.0);
+	glEnable(GL_CULL_FACE);
+	glm::vec3 vPos3 = glm::vec3(22.5f, 16.0f, -7.5f);
+	mModelMatrix = glm::mat4(1.0f);
+	mModelMatrix = glm::translate(mModelMatrix, vPos3);
+	mModelMatrix = glm::scale(mModelMatrix, glm::vec3(30.0f, 30.0f, 30.0f));
+	// We need to transform normals properly, it's done by transpose of inverse matrix of rotations and scales
 	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
-	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, (void*)0);
-
+	spMain.SetUniform("matrices.modelMatrix", mModelMatrix);
+	glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)0);
+	glDisable(GL_CULL_FACE);
 
 	// render ground
 	glBindVertexArray(uiVAOs[0]);
