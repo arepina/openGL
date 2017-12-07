@@ -204,11 +204,11 @@ HINSTANCE COpenGLWinApp::GetInstance()
 // Application entry point.
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR sCmdLine, int iShow)
 {
-	if(!appMain.InitializeApp("Семинар 12. Освещение"))
+	if(!appMain.InitializeApp("Семинар 9. Освещение. Репина Анастасия БПИ143"))
 		return 0;
 	appMain.RegisterAppClass(hInstance);
 
-	if(!appMain.CreateAppWindow("Семинар 15. Освещение"))
+	if(!appMain.CreateAppWindow("Семинар 9. Освещение. Репина Анастасия БПИ143"))
 		return 0;
 	appMain.ResetTimer();
 

@@ -1,0 +1,5 @@
+﻿  openGLControl.cpp
+d:\opengl\opengl_3\opengl_3\openglcontrol.cpp(182): warning C4302: 'type cast': truncation from 'LPSTR' to 'WORD'
+d:\opengl\opengl_3\opengl_3\openglcontrol.cpp(183): warning C4302: 'type cast': truncation from 'LPSTR' to 'WORD'
+  OpenGL_3.vcxproj -> D:\openGL\OpenGL_3\Debug\OpenGL_3.exe
+  OpenGL_3.vcxproj -> D:\openGL\OpenGL_3\Debug\OpenGL_3.pdb (Partial PDB)
