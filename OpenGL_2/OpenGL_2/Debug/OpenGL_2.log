@@ -1,4 +1,2 @@
-﻿cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
-  renderScene.cpp
-  OpenGL_2.vcxproj -> D:\openGL\OpenGL_2\Debug\OpenGL_2.exe
+﻿  OpenGL_2.vcxproj -> D:\openGL\OpenGL_2\Debug\OpenGL_2.exe
   OpenGL_2.vcxproj -> D:\openGL\OpenGL_2\Debug\OpenGL_2.pdb (Partial PDB)

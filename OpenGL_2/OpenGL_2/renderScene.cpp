@@ -17,7 +17,7 @@
 
 //Changed the shaders and skybox, added cylinder, cube, 2 thores and pyramide
 
-#define NUMTEXTURES 5
+#define NUMTEXTURES 8
 
 /* One VBO, where all static data are stored now,
 in this tutorial vertex is stored as 3 floats for
@@ -114,7 +114,7 @@ void InitPyramid()
 
 void LoadTextures()
 {
-	string sTextureNames[] = { "snow.bmp", "medvedev.jpg", "tower.jpg", "putin.jpg", "ground.jpg" };
+	string sTextureNames[] = { "snow.bmp", "medvedev.jpg", "tower.jpg", "putin.jpg", "ground.jpg", "roof.png", "roof1.jpg", "colored.jpg" };
 
 	FOR(i, NUMTEXTURES)
 	{
@@ -131,7 +131,7 @@ void LoadTextures()
 
 	sbMainSkybox.LoadSkybox("data\\skyboxes\\", "snowalps_ft.png", "snowalps_bk.png", "snowalps_lf.png", "snowalps_rt.png", "snowalps_up.png", "snowalps_dn.png");
 
-	//sbMainSkybox.LoadSkybox("data\\skyboxes\\", "bloodynight_ft.png", "bloodynight_bk.png", "bloodynight_lf.png", "bloodynight_rt.png", "bloodynight_up.png", "bloodynight_dn.png");
+	//sbMainSkybox.LoadSkybox("data\\skyboxes\\", "river-c_ft.png", "river-c_bk.png", "river-c_lf.png", "river-c_rt.png", "river-c_up.png", "river-c_dn.png");
 
 	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);
 }
@@ -229,16 +229,16 @@ void RenderScene(LPVOID lpParam)
 
 	// render pyramid
 	glBindVertexArray(uiVAOs[2]);
-	tTextures[2].BindTexture(1);
-	tTextures[4].BindTexture();
+	tTextures[5].BindTexture(1);
+	tTextures[6].BindTexture();
 	spMain.SetUniform("fTextureContributions[0]", 1.0f - fTextureContribution);
 	spMain.SetUniform("numTextures", 2);
 	float PI2 = float(atan(1.0)*4.0);
 	glEnable(GL_CULL_FACE);
-	glm::vec3 vPos3 = glm::vec3(22.5f, 16.0f, -7.5f);
+	glm::vec3 vPos3 = glm::vec3(22.0f, 16.0f, -8.0f);
 	mModelMatrix = glm::mat4(1.0f);
 	mModelMatrix = glm::translate(mModelMatrix, vPos3);
-	mModelMatrix = glm::scale(mModelMatrix, glm::vec3(30.0f, 30.0f, 30.0f));
+	mModelMatrix = glm::scale(mModelMatrix, glm::vec3(32.0f, 32.0f, 32.0f));
 	// We need to transform normals properly, it's done by transpose of inverse matrix of rotations and scales
 	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
 	spMain.SetUniform("matrices.modelMatrix", mModelMatrix);
@@ -274,7 +274,7 @@ void RenderScene(LPVOID lpParam)
 	glDrawArrays(GL_TRIANGLES, 6 + iTorusFaces * 3, iTorusFaces2 * 3);
 
 	// render cylinder
-	tTextures[2].BindTexture();
+	tTextures[7].BindTexture();
 	vPos = glm::vec3(-15.0f, 10.0, 0.0f);
 	mModelMatrix = glm::translate(glm::mat4(1.0), vPos);
 	mModelMatrix = glm::rotate(mModelMatrix, fGlobalAngle, glm::vec3(1.0f, 0.0f, 0.0f));
