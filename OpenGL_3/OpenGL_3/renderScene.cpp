@@ -34,12 +34,8 @@ CPointLight plLight;
 
 #include "static_geometry.h"
 
-// Initializes OpenGL features that will be used.
-// lpParam - Pointer to anything you want.
-void InitScene(LPVOID lpParam)
+void initSceneObjects()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
 	// Prepare all scene objects
 
 	vboSceneObjects.CreateVBO();
@@ -54,41 +50,64 @@ void InitScene(LPVOID lpParam)
 
 	// Vertex positions
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), 0);
 	// Texture coordinates
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), (void*)sizeof(glm::vec3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
 	// Normal vectors
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), (void*)(sizeof(glm::vec3)+sizeof(glm::vec2)));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
+}
 
+void initTextures()
+{
+	// Load textures
+
+	string sTextureNames[] = { "grass.png", "met_wall01a.jpg", "tower.jpg", "box.jpg", "ground.jpg" };
+
+	FOR(i, NUMTEXTURES)
+	{
+		tTextures[i].LoadTexture2D("data\\textures\\" + sTextureNames[i], true);
+		tTextures[i].SetFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP);
+	}
+}
+
+void initLight()
+{
+	cCamera = CFlyingCamera(glm::vec3(0.0f, 10.0f, 120.0f), glm::vec3(0.0f, 10.0f, 119.0f), glm::vec3(0.0f, 1.0f, 0.0f), 25.0f, 0.001f);
+	cCamera.SetMovingKeys('W', 'S', 'A', 'D');
+
+	dlSun = CDirectionalLight(glm::vec3(0.13f, 0.13f, 0.13f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);//sun intesity
+	// Creating spotlight, position and direction will get updated every frame, that's why zero vectors
+	slFlashLight = CSpotLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1, 15.0f, 0.017f);//spot light params
+	//plLight = CPointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 10.0f, 0.0f), 0.15f, 0.3f, 0.007f, 0.00008f);
+	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(0.0f, 10.0f, 0.0f), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+}
+
+void initBack()
+{
+	glEnable(GL_DEPTH_TEST);
+	glClearDepth(1.0);
+	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);//back colors
+}
+
+// Initializes OpenGL features that will be used.
+// lpParam - Pointer to anything you want.
+void InitScene(LPVOID lpParam)
+{
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+	initSceneObjects();
 
 	if(!PrepareShaderPrograms())
 	{
 		PostQuitMessage(0);
 		return;
 	}
-	// Load textures
-
-	string sTextureNames[] = {"grass.png", "met_wall01a.jpg", "tower.jpg", "box.jpg", "ground.jpg"};
-
-	FOR(i, NUMTEXTURES)
-	{
-		tTextures[i].LoadTexture2D("data\\textures\\"+sTextureNames[i], true);
-		tTextures[i].SetFiltering(TEXTURE_FILTER_MAG_BILINEAR, TEXTURE_FILTER_MIN_BILINEAR_MIPMAP);
-	}
-
-	glEnable(GL_DEPTH_TEST);
-	glClearDepth(1.0);
-	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	
-	cCamera = CFlyingCamera(glm::vec3(0.0f, 10.0f, 120.0f), glm::vec3(0.0f, 10.0f, 119.0f), glm::vec3(0.0f, 1.0f, 0.0f), 25.0f, 0.001f);
-	cCamera.SetMovingKeys('W', 'S', 'A', 'D');
-
-	dlSun = CDirectionalLight(glm::vec3(0.13f, 0.13f, 0.13f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);
-	// Creating spotlight, position and direction will get updated every frame, that's why zero vectors
-	slFlashLight = CSpotLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1, 15.0f, 0.017f);
-	plLight = CPointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 10.0f, 0.0f), 0.15f, 0.3f, 0.007f, 0.00008f);
+	initTextures();
+	initBack();	
+	initLight();	
 }
 
 float fGlobalAngle;
@@ -164,8 +183,8 @@ void RenderScene(LPVOID lpParam)
 	tTextures[3].BindTexture();
 	float PI = float(atan(1.0)*4.0);
 
-	FOR(j, 2)
-	FOR(i, 16)
+	FOR(j, 4)//stairs number
+	FOR(i, 16)//cubes number
 	{
 		//glm::vec3 vPos = glm::vec3(cos(PI/4 * i) * 30.0f, 4.0f, sin(PI/4*i) * 30.0f);
 		glm::vec3 vPos = glm::vec3(30.0f, 4.0f + 8.0f*j, 0.0f);
@@ -199,9 +218,12 @@ void RenderScene(LPVOID lpParam)
 
 	cCamera.Update();
 
-	if(Keys::Onekey('F'))
+	if(Keys::Onekey('F'))//flashlight
 		slFlashLight.bOn = 1-slFlashLight.bOn;
 
+	if (Keys::Onekey('G'))//day & night
+		dlSun.fAmbient = 1 - dlSun.fAmbient;
+	
 	glEnable(GL_DEPTH_TEST);
 	if(Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
 	fGlobalAngle += appMain.sof(1.0f);

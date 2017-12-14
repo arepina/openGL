@@ -242,7 +242,7 @@ glm::vec3 vPyramidVertices[5] =
 	glm::vec3(0.25f, 0.5f, 0.25f)
 };
 
-glm::vec2 vPyramidTexCoords[5] = { glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f), glm::vec2(0.5f, 1.0f) };
+glm::vec2 vPyramidTexCoords[5] = { glm::vec2(0.0f, 0.0f), glm::vec2(1.0f, 0.0f), glm::vec2(1.0f, 1.0f), glm::vec2(0.0f, 1.0f), glm::vec2(0.5f, 0.5f) };
 
 glm::vec3 vPyramidNormals[5] =
 {
