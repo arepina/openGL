@@ -17,6 +17,14 @@
 
 #define NUMTEXTURES 5
 
+//Repina Anastasia BSE143
+//Viual Studio 2017 16/12/2017
+//Created different light sources: spot, directional, point
+//z nad x buttons - light of objects on and off
+//w a s d buttons - moving
+//q and e butttons - day and night change
+//f - flashlight turn on and off
+
 /* One VBO, where all static data are stored now,
 in this tutorial vertex is stored as 3 floats for
 position, 2 floats for texture coordinate and
@@ -80,8 +88,9 @@ void initLight()
 	dlSun = CDirectionalLight(glm::vec3(0.13f, 0.13f, 0.13f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);//sun intesity
 	// Creating spotlight, position and direction will get updated every frame, that's why zero vectors
 	slFlashLight = CSpotLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1, 15.0f, 0.017f);//spot light params
-	//plLight = CPointLight(glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.0f, 10.0f, 0.0f), 0.15f, 0.3f, 0.007f, 0.00008f);
 	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(0.0f, 10.0f, 0.0f), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+
+	dlSun.fAmbient = 0;
 }
 
 void initBack()
@@ -99,15 +108,15 @@ void InitScene(LPVOID lpParam)
 
 	initSceneObjects();
 
-	if(!PrepareShaderPrograms())
+	if (!PrepareShaderPrograms())
 	{
 		PostQuitMessage(0);
 		return;
 	}
-	
+
 	initTextures();
-	initBack();	
-	initLight();	
+	initBack();
+	initLight();
 }
 
 float fGlobalAngle;
@@ -128,19 +137,19 @@ void RenderScene(LPVOID lpParam)
 	// Set spotlight parameters
 
 	glm::vec3 vSpotLightPos = cCamera.vEye;
-	glm::vec3 vCameraDir = glm::normalize(cCamera.vView-cCamera.vEye);
+	glm::vec3 vCameraDir = glm::normalize(cCamera.vView - cCamera.vEye);
 	// Move down a little
 	vSpotLightPos.y -= 3.2f;
 	// Find direction of spotlight
-	glm::vec3 vSpotLightDir = (vSpotLightPos+vCameraDir*75.0f)-vSpotLightPos;
+	glm::vec3 vSpotLightDir = (vSpotLightPos + vCameraDir*75.0f) - vSpotLightPos;
 	vSpotLightDir = glm::normalize(vSpotLightDir);
 	// Find vector of horizontal offset
-	glm::vec3 vHorVector = glm::cross(cCamera.vView-cCamera.vEye, cCamera.vUp);
+	glm::vec3 vHorVector = glm::cross(cCamera.vView - cCamera.vEye, cCamera.vUp);
 	vSpotLightPos += vHorVector*3.3f;
 	// Set it
 	slFlashLight.vPosition = vSpotLightPos;
 	slFlashLight.vDirection = vSpotLightDir;
-	
+
 	slFlashLight.SetUniformData(&spMain, "spotLight");
 
 	plLight.SetUniformData(&spMain, "pointLight");
@@ -160,7 +169,7 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetUniform("matrices.viewMatrix", &mView);
 
 	mModelMatrix = glm::translate(glm::mat4(1.0f), cCamera.vEye);
-	
+
 	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
 	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mView*mModelMatrix)));
 
@@ -176,7 +185,7 @@ void RenderScene(LPVOID lpParam)
 
 	tTextures[0].BindTexture();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-	
+
 	// Render cubes
 	glm::mat4 mModelToCamera;
 
@@ -184,12 +193,12 @@ void RenderScene(LPVOID lpParam)
 	float PI = float(atan(1.0)*4.0);
 
 	FOR(j, 4)//stairs number
-	FOR(i, 16)//cubes number
+		FOR(i, 16)//cubes number
 	{
 		//glm::vec3 vPos = glm::vec3(cos(PI/4 * i) * 30.0f, 4.0f, sin(PI/4*i) * 30.0f);
 		glm::vec3 vPos = glm::vec3(30.0f, 4.0f + 8.0f*j, 0.0f);
 		mModelMatrix = glm::mat4(1.0f);
-		mModelMatrix = glm::rotate(mModelMatrix, PI/8*i + PI/16*j, glm::vec3(0.0f, 1.0f, 0.0f));
+		mModelMatrix = glm::rotate(mModelMatrix, PI / 8 * i + PI / 16 * j, glm::vec3(0.0f, 1.0f, 0.0f));
 		mModelMatrix = glm::translate(mModelMatrix, vPos);
 		mModelMatrix = glm::scale(mModelMatrix, glm::vec3(8.0f, 8.0f, 8.0f));
 		// We need to transform normals properly, it's done by transpose of inverse matrix of rotations and scales
@@ -218,14 +227,39 @@ void RenderScene(LPVOID lpParam)
 
 	cCamera.Update();
 
-	if(Keys::Onekey('F'))//flashlight
-		slFlashLight.bOn = 1-slFlashLight.bOn;
+	if (Keys::Onekey('F'))//flashlight
+		slFlashLight.bOn = 1 - slFlashLight.bOn;
 
-	if (Keys::Onekey('G'))//day & night
-		dlSun.fAmbient = 1 - dlSun.fAmbient;
-	
+	if (Keys::Key('Q'))//day
+	{
+		dlSun.fAmbient += 0.001;
+		dlSun.vColor.r += 0.001;
+		dlSun.vColor.g += 0.001;
+		dlSun.vColor.b += 0.001;
+	}
+	if (Keys::Key('E'))//night
+	{
+		dlSun.fAmbient -= 0.001;
+		dlSun.vColor.r -= 0.001;
+		dlSun.vColor.g -= 0.001;
+		dlSun.vColor.b -= 0.001;
+	}
+	dlSun.fAmbient = min(max(0.0f, dlSun.fAmbient), 1.0f);
+	dlSun.vColor.r = min(max(0.0f, dlSun.vColor.r), 1.0f);
+	dlSun.vColor.g = min(max(0.0f, dlSun.vColor.g), 1.0f);
+	dlSun.vColor.b = min(max(0.0f, dlSun.vColor.b), 1.0f);
+
+	if(dlSun.fAmbient >= 0.5f)
+		slFlashLight.bOn = 0;
+	else
+		slFlashLight.bOn = 1;
+
+	if (Keys::Key('Z')) plLight.fAmbient += 0.01;//objects light
+	if (Keys::Key('X')) plLight.fAmbient -= 0.01;
+	plLight.fAmbient = min(max(0.0f, plLight.fAmbient), 1.0f);
+
 	glEnable(GL_DEPTH_TEST);
-	if(Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
+	if (Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
 	fGlobalAngle += appMain.sof(1.0f);
 	oglControl->SwapBuffers();
 }

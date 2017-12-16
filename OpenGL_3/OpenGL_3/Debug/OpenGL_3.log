@@ -1,3 +1,13 @@
 ﻿  renderScene.cpp
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(235): warning C4305: '+=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(236): warning C4305: '+=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(237): warning C4305: '+=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(238): warning C4305: '+=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(242): warning C4305: '-=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(243): warning C4305: '-=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(244): warning C4305: '-=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(245): warning C4305: '-=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(257): warning C4305: '+=': truncation from 'double' to 'float'
+d:\opengl\opengl_3\opengl_3\renderscene.cpp(258): warning C4305: '-=': truncation from 'double' to 'float'
   OpenGL_3.vcxproj -> D:\openGL\OpenGL_3\Debug\OpenGL_3.exe
   OpenGL_3.vcxproj -> D:\openGL\OpenGL_3\Debug\OpenGL_3.pdb (Partial PDB)
