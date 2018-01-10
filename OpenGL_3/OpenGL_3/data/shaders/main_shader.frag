@@ -17,6 +17,14 @@ uniform DirectionalLight sunLight;
 uniform SpotLight spotLight;
 uniform PointLight pointLight;
 
+uniform SpotLight spotLight1;
+uniform SpotLight spotLight2;
+uniform SpotLight spotLight3;
+
+uniform PointLight pointLight1;
+uniform PointLight pointLight2;
+uniform PointLight pointLight3;
+
 void main()
 {
 	vec3 vNormalized = normalize(vNormal);
@@ -25,6 +33,12 @@ void main()
 	vec4 vMixedColor = vTexColor*vColor;
 	vec4 vDirLightColor = getDirectionalLightColor(sunLight, vNormal);
 	vec4 vSpotlightColor = GetSpotLightColor(spotLight, vWorldPos);
+	vec4 vSpotlightColor1 = GetSpotLightColor(spotLight1, vWorldPos);
+	vec4 vSpotlightColor2 = GetSpotLightColor(spotLight2, vWorldPos);
+	vec4 vSpotlightColor3 = GetSpotLightColor(spotLight3, vWorldPos);
 	vec4 vPointlightColor = getPointLightColor(pointLight, vWorldPos, vNormalized);
-	outputColor = vMixedColor*(vDirLightColor+vSpotlightColor+vPointlightColor);
+	vec4 vPointlightColor1 = getPointLightColor(pointLight1, vWorldPos, vNormalized);
+	vec4 vPointlightColor2 = getPointLightColor(pointLight2, vWorldPos, vNormalized);
+	vec4 vPointlightColor3 = getPointLightColor(pointLight3, vWorldPos, vNormalized);
+	outputColor = vMixedColor*(vDirLightColor+vSpotlightColor+vSpotlightColor1+vSpotlightColor2+vSpotlightColor3+vPointlightColor+vPointlightColor1+vPointlightColor2+vPointlightColor3);
 }

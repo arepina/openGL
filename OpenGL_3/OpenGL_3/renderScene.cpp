@@ -38,7 +38,13 @@ CFlyingCamera cCamera;
 
 CDirectionalLight dlSun;
 CSpotLight slFlashLight;
+CSpotLight slFlashLight1;
+CSpotLight slFlashLight2;
+CSpotLight slFlashLight3;
 CPointLight plLight;
+CPointLight plLight1;
+CPointLight plLight2;
+CPointLight plLight3;
 
 #include "static_geometry.h"
 
@@ -86,9 +92,19 @@ void initLight()
 	cCamera.SetMovingKeys('W', 'S', 'A', 'D');
 
 	dlSun = CDirectionalLight(glm::vec3(0.13f, 0.13f, 0.13f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 1.0f);//sun intesity
+
+
 	// Creating spotlight, position and direction will get updated every frame, that's why zero vectors
+	
 	slFlashLight = CSpotLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 1, 15.0f, 0.017f);//spot light params
+	slFlashLight1 = CSpotLight(glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(-100.0f, 10.0f, -100.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1, 15.0f, 0.001f);//spot light params
+	slFlashLight2 = CSpotLight(glm::vec3(0.0f, 1.f, 0.0f), glm::vec3(-80.0f, 10.0f, -100.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1, 15.0f, 0.001f);//spot light params
+	slFlashLight3 = CSpotLight(glm::vec3(0.0f, 0.f, 1.0f), glm::vec3(-60.0f, 10.0f, -100.0f), glm::vec3(0.0f, 0.0f, 1.0f), 1, 15.0f, 0.001f);//spot light params
+
 	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(0.0f, 10.0f, 0.0f), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+	plLight1 = CPointLight(glm::vec3(1.f, 0.f, 0.f), glm::vec3(100.0f, 10.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
+	plLight2 = CPointLight(glm::vec3(0.f, 1.f, 0.f), glm::vec3(60.0f, 10.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
+	plLight3 = CPointLight(glm::vec3(0.f, 0.f, 1.f), glm::vec3(20.0f, 10.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
 
 	dlSun.fAmbient = 0;
 }
@@ -152,7 +168,18 @@ void RenderScene(LPVOID lpParam)
 
 	slFlashLight.SetUniformData(&spMain, "spotLight");
 
+	slFlashLight1.SetUniformData(&spMain, "spotLight1");
+
+	slFlashLight2.SetUniformData(&spMain, "spotLight2");
+
+	slFlashLight3.SetUniformData(&spMain, "spotLight3");
+
 	plLight.SetUniformData(&spMain, "pointLight");
+
+	plLight1.SetUniformData(&spMain, "pointLight1");
+
+	plLight2.SetUniformData(&spMain, "pointLight2");
+	plLight3.SetUniformData(&spMain, "pointLight3");
 
 	oglControl->ResizeOpenGLViewportFull();
 
@@ -192,8 +219,8 @@ void RenderScene(LPVOID lpParam)
 	tTextures[3].BindTexture();
 	float PI = float(atan(1.0)*4.0);
 
-	FOR(j, 4)//stairs number
-		FOR(i, 16)//cubes number
+	FOR(j, 6)//stairs number
+		FOR(i, 20)//cubes number
 	{
 		//glm::vec3 vPos = glm::vec3(cos(PI/4 * i) * 30.0f, 4.0f, sin(PI/4*i) * 30.0f);
 		glm::vec3 vPos = glm::vec3(30.0f, 4.0f + 8.0f*j, 0.0f);
@@ -223,7 +250,6 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
 	spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
 	glDrawArrays(GL_TRIANGLES, 42 + iTorusFaces * 3, iTorusFaces2 * 3);
-
 
 	cCamera.Update();
 
