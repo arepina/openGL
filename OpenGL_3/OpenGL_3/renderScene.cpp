@@ -234,7 +234,7 @@ void RenderScene(LPVOID lpParam)
 		glDrawArrays(GL_TRIANGLES, 6, 36);
 	}
 
-	// render torus
+	// render torus 
 	tTextures[1].BindTexture();
 	// Now it's gonna float in the air
 	glm::vec3 vPos = glm::vec3(0.0f, 10.0, 0.0f);
