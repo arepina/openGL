@@ -22,6 +22,7 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "Hidden.h"
 
 #define NUMTEXTURES 5
 #define FOG_EQUATION_LINEAR		0
@@ -45,6 +46,9 @@ CDirectionalLight dlSun;
 
 CMaterial matShiny;
 CAssimpModel amModels[3];
+
+int housesNum = 6;
+Hidden hidden = Hidden(housesNum);
 
 #include "static_geometry.h"
 
@@ -172,34 +176,41 @@ void RenderScene(LPVOID lpParam)
 
 	glBindVertexArray(uiVAOs[0]);
 
-	// This values will set the darkness of whole scene, that's why such name of variable :D
-	static float fAngleOfDarkness = 45.0f;
-	// You can play with direction of light with '+' and '-' key
-	if (Keys::Onekey('Z'))fAngleOfDarkness += appMain.sof(90);
-	if (Keys::Onekey('X'))fAngleOfDarkness -= appMain.sof(90);
-	// Set the directional vector of light
-	dlSun.vDirection = glm::vec3(-sin(fAngleOfDarkness*3.1415f / 180.0f), -cos(fAngleOfDarkness*3.1415f / 180.0f), 0.0f);
-
 	dlSun.SetUniformData(&spMain, "sunLight");
 
 	spMain.SetUniform("vColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	spMain.SetUniform("matrices.modelMatrix", glm::mat4(1.0f));
 	spMain.SetUniform("matrices.normalMatrix", glm::mat4(1.0f));
 
-
 	// Render ground
 	tTextures[0].BindTexture();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	FOR(i, 3)
+	// Render a house
+
+	CAssimpModel::BindModelsVAO();
+
+	FOR(i, housesNum)
 	{
-		glm::vec3 vPos = glm::vec3(0.0f, 0.0, 50 + i * -100.0f);
-		mModelMatrix = glm::translate(glm::mat4(1.0), vPos);
-		mModelMatrix = glm::scale(mModelMatrix, glm::vec3(8.0f, 8.0, 8.0f));
-		spMain.SetUniform("matrices.normalMatrix", glm::transpose(glm::inverse(mModelMatrix)));
-		spMain.SetUniform("matrices.modelMatrix", &mModelMatrix);
-		mdlHouse.RenderModel();
-	}
+		glm::vec3 vPos = glm::vec3(0.0f, 0.0, 50 + i * -60.0f);
+
+		glm::mat4 mModel = glm::translate(glm::mat4(1.0), vPos);
+		mModel = glm::scale(mModel, glm::vec3(8, 8, 8));
+
+		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+		amModels[0].RenderModel();
+
+		if (i == hidden.getHidden())
+		{
+			// Render treasure chest
+
+			glm::mat4 mModel1 = glm::translate(glm::mat4(1.0), vPos);
+			mModel1 = glm::scale(mModel1, glm::vec3(0.5f, 0.5f, 0.5f));
+
+			spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel1);
+			amModels[1].RenderModel();
+		}
+	}	
 
 	cCamera.Update();
 

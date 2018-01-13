@@ -1,3 +1,7 @@
-﻿  objModel.cpp
+﻿cl : Command line warning D9028: minimal rebuild failure, reverting to normal build
+  Hidden.cpp
+d:\opengl\opengl_4\opengl_4\hidden.cpp(7): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  renderScene.cpp
+  Generating Code...
   OpenGL_4.vcxproj -> D:\openGL\OpenGL_4\Debug\OpenGL_4.exe
   OpenGL_4.vcxproj -> D:\openGL\OpenGL_4\Debug\OpenGL_4.pdb (Partial PDB)

@@ -60,6 +60,9 @@
     <ClCompile Include="assimp_model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Hidden.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="flyingCamera.h">
@@ -105,6 +108,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Hidden.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

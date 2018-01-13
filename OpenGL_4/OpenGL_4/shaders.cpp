@@ -310,3 +310,9 @@ void CShaderProgram::SetUniform(string sName, const int iValue)
 	int iLoc = glGetUniformLocation(uiProgram, sName.c_str());
 	glUniform1i(iLoc, iValue);
 }
+
+void CShaderProgram::SetModelAndNormalMatrix(string sModelMatrixName, string sNormalMatrixName, glm::mat4 &mModelMatrix)
+{
+	SetUniform(sModelMatrixName, mModelMatrix);
+	SetUniform(sNormalMatrixName, glm::transpose(glm::inverse(mModelMatrix)));
+}

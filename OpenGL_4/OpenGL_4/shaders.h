@@ -58,6 +58,9 @@ public:
 	void SetUniform(string sName, int* iValues, int iCount = 1);
 	void SetUniform(string sName, const int iValue);
 
+	// Model and normal matrix setting ispretty common
+	void SetModelAndNormalMatrix(string sModelMatrixName, string sNormalMatrixName, glm::mat4& mModelMatrix);
+
 	CShaderProgram();
 
 private:
