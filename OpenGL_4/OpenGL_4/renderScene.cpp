@@ -57,7 +57,7 @@ namespace FogParameters
 	float fDensity = 0.04f;
 	float fStart = 10.0f;
 	float fEnd = 75.0f;
-	glm::vec4 vFogColor = glm::vec4(0.7f, 0.7f, 0.7f, 1.0f);
+	glm::vec4 vFogColor = glm::vec4(0.7f, 0.f, 0.7f, 1.0f);
 	int iFogEquation = FOG_EQUATION_EXP; // 0 = linear, 1 = exp, 2 = exp2
 };
 
@@ -115,6 +115,7 @@ void InitScene(LPVOID lpParam)
 
 	amModels[0].LoadModelFromFile("data\\models\\house\\house.3ds");
 	amModels[1].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
+	//amModels[2].LoadModelFromFile("data\\models\\horse\\Horse.obj");
 
 	CAssimpModel::FinalizeVBO();
 
@@ -193,24 +194,27 @@ void RenderScene(LPVOID lpParam)
 	FOR(i, housesNum)
 	{
 		glm::vec3 vPos = glm::vec3(0.0f, 0.0, 50 + i * -60.0f);
-
 		glm::mat4 mModel = glm::translate(glm::mat4(1.0), vPos);
 		mModel = glm::scale(mModel, glm::vec3(8, 8, 8));
-
 		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 		amModels[0].RenderModel();
 
 		if (i == hidden.getHidden())
 		{
 			// Render treasure chest
-
 			glm::mat4 mModel1 = glm::translate(glm::mat4(1.0), vPos);
 			mModel1 = glm::scale(mModel1, glm::vec3(0.5f, 0.5f, 0.5f));
-
 			spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel1);
 			amModels[1].RenderModel();
 		}
-	}	
+	}
+
+	/*CAssimpModel::BindModelsVAO();
+
+	glm::mat4 mModel = glm::translate(glm::mat4(1.0), glm::vec3(100.f, 0.f, 0.f));
+	mModel = glm::scale(mModel, glm::vec3(0.5f, 0.5f, 0.5f));
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[2].RenderModel();*/
 
 	cCamera.Update();
 
