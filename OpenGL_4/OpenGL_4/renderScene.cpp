@@ -1,3 +1,8 @@
+//Repina Anastasia BSE143
+//Added assimp + houses + tresure game + cats
+//Changed the fog params
+// + - more fog - - less fog
+// f - fog 3 types FOG_EQUATION_LINEAR, FOG_EQUATION_EXP (PG UP and PG DOWN buttons changes the fog end line), FOG_EQUATION_EXP2
 #include "common_header.h"
 
 #include "win_OpenGLApp.h"
@@ -115,7 +120,9 @@ void InitScene(LPVOID lpParam)
 
 	amModels[0].LoadModelFromFile("data\\models\\house\\house.3ds");
 	amModels[1].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
-	//amModels[2].LoadModelFromFile("data\\models\\horse\\Horse.obj");
+	amModels[2].LoadModelFromFile("data\\models\\cat\\cat.obj");
+	//amModels[2].LoadModelFromFile("data\\models\\Bike\\KTM.obj");
+	//amModels[2].LoadModelFromFile("data\\models\\Wolf\\Wolf.obj");
 
 	CAssimpModel::FinalizeVBO();
 
@@ -209,12 +216,19 @@ void RenderScene(LPVOID lpParam)
 		}
 	}
 
-	/*CAssimpModel::BindModelsVAO();
+	//Render cat
 
-	glm::mat4 mModel = glm::translate(glm::mat4(1.0), glm::vec3(100.f, 0.f, 0.f));
-	mModel = glm::scale(mModel, glm::vec3(0.5f, 0.5f, 0.5f));
-	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-	amModels[2].RenderModel();*/
+	CAssimpModel::BindModelsVAO();
+	
+	for (int i = 0; i < housesNum; i++)
+	{
+		glm::vec3 vPos = glm::vec3(-50.0f, 0.0, 50 + i * -60.0f);
+		glm::mat4 mModel = glm::translate(glm::mat4(1.0), vPos);
+		mModel = glm::scale(mModel, glm::vec3(10.f, 10.f, 10.f));
+
+		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+		amModels[2].RenderModel();
+	}
 
 	cCamera.Update();
 
