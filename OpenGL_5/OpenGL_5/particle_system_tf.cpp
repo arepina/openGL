@@ -252,6 +252,11 @@ void CParticleSystemTransformFeedback::SetGeneratorProperties(glm::vec3 a_vGenPo
 	iNumToGenerate = a_iNumToGenerate;
 }
 
+void CParticleSystemTransformFeedback::SetColor(glm::vec3 a_vGenColor)
+{
+	vGenColor = a_vGenColor;
+}
+
 /*-----------------------------------------------
 
 Name:	GetNumParticles
@@ -265,4 +270,19 @@ Result:	Retrieves current number of particles.
 int CParticleSystemTransformFeedback::GetNumParticles()
 {
 	return iNumParticles;
+}
+
+void CParticleSystemTransformFeedback::SetNumParticles(int number)
+{
+	iNumParticles = number;
+}
+
+glm::vec3 CParticleSystemTransformFeedback::GetSpeed()
+{
+	return vGenVelocityRange;
+}
+
+void CParticleSystemTransformFeedback::SetSpeed(glm::vec3 number)
+{
+	vGenVelocityRange = number;
 }

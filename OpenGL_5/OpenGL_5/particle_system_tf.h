@@ -45,10 +45,15 @@ public:
 
 	void SetGeneratorProperties(glm::vec3 a_vGenPosition, glm::vec3 a_vGenVelocityMin, glm::vec3 a_vGenVelocityMax, glm::vec3 a_vGenGravityVector, glm::vec3 a_vGenColor, float a_fGenLifeMin, float a_fGenLifeMax, float a_fGenSize, float fEvery, int a_iNumToGenerate);
 
+	void SetColor(glm::vec3 a_vGenColor);
+	int GetNumParticles();
+	void SetNumParticles(int number);
+	glm::vec3 GetSpeed();
+	void SetSpeed(glm::vec3 number);
+
 	void ClearAllParticles();
 	bool ReleaseParticleSystem();
 
-	int GetNumParticles();
 
 	void SetMatrices(glm::mat4* a_matProjection, glm::vec3 vEye, glm::vec3 vView, glm::vec3 vUpVector);
 

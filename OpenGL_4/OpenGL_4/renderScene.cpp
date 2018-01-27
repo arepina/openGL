@@ -42,7 +42,7 @@ position, 2 floats for texture coordinate and
 CVertexBufferObject vboSceneObjects, vboCubeInd, vboCube;
 UINT uiVAOs[1]; // Only one VAO now
 
-//CTexture tTextures[NUMTEXTURES];
+CTexture tTextures[NUMTEXTURES];
 CFlyingCamera cCamera;
 
 CSkybox sbMainSkybox;

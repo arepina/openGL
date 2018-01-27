@@ -51,7 +51,7 @@ Name:    InitScene
 Params:  lpParam - Pointer to anything you want.
 
 Result:  Initializes OpenGL features that will
-         be used.
+		 be used.
 
 /*---------------------------------------------*/
 
@@ -59,12 +59,12 @@ void InitScene(LPVOID lpParam)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	if(!PrepareShaderPrograms())
+	if (!PrepareShaderPrograms())
 	{
 		PostQuitMessage(0);
 		return;
 	}
-	
+
 	LoadAllTextures();
 
 	vboSceneObjects.CreateVBO();
@@ -78,13 +78,13 @@ void InitScene(LPVOID lpParam)
 
 	// Vertex positions
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), 0);
 	// Texture coordinates
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), (void*)sizeof(glm::vec3));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)sizeof(glm::vec3));
 	// Normal vectors
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2*sizeof(glm::vec3)+sizeof(glm::vec2), (void*)(sizeof(glm::vec3)+sizeof(glm::vec2)));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(glm::vec3) + sizeof(glm::vec2), (void*)(sizeof(glm::vec3) + sizeof(glm::vec2)));
 
 
 	glEnable(GL_DEPTH_TEST);
@@ -93,19 +93,19 @@ void InitScene(LPVOID lpParam)
 	// Here we load font with pixel size 32 - this means that if we print with size above 32, the quality will be low
 	ftFont.LoadSystemFont("arial.ttf", 32);
 	ftFont.SetShaderProgram(&spFont2D);
-	
+
 	cCamera = CFlyingCamera(glm::vec3(0.0f, 30.0f, 100.0f), glm::vec3(0.0f, 30.0f, 99.0f), glm::vec3(0.0f, 1.0f, 0.0f), 20.0f, 0.05f);
 	cCamera.SetMovingKeys('W', 'S', 'A', 'D');
 
 	sbMainSkybox.LoadSkybox("data\\skyboxes\\bluefreeze\\", "bluefreeze_front.jpg", "bluefreeze_back.jpg", "bluefreeze_right.jpg", "bluefreeze_left.jpg", "bluefreeze_top.jpg", "bluefreeze_top.jpg");
 
-	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f)/2, -sqrt(2.0f)/2, 0), 0.5f, 0);
+	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f) / 2, -sqrt(2.0f) / 2, 0), 0.5f, 0);
 
 	amModels[0].LoadModelFromFile("data\\models\\house\\house.3ds");
 	amModels[1].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
 	amModels[2].LoadModelFromFile("data\\models\\cat\\cat.obj");
 	amModels[3].LoadModelFromFile("data\\models\\Wolf\\Wolf.obj");
-	
+
 	CAssimpModel::FinalizeVBO();
 	CMultiLayeredHeightmap::LoadTerrainShaderProgram();
 	hmWorld.LoadHeightMapFromImage("data\\worlds\\world_like_in_21th.bmp");
@@ -119,13 +119,15 @@ void InitScene(LPVOID lpParam)
 		glm::vec3(-5, 0, -5), // Minimal velocity
 		glm::vec3(5, 20, 5), // Maximal velocity
 		glm::vec3(0, -5, 0), // Gravity force applied to particles
-		glm::vec3(0.0f, 0.5f, 1.0f), // Color (light blue)
+		glm::vec3(0.1f, 0.f, 0.f), // Color
 		1.5f, // Minimum lifetime in seconds
 		3.0f, // Maximum lifetime in seconds
 		0.75f, // Rendered size
 		0.02f, // Spawn every 0.05 seconds
 		30); // And spawn 30 particles
 }
+
+static float fGlobalAngleNew;
 
 /*-----------------------------------------------
 
@@ -159,11 +161,11 @@ void RenderScene(LPVOID lpParam)
 	// This values will set the darkness of whole scene, that's why such name of variable :D
 	static float fAngleOfDarkness = 45.0f;
 	// You can play with direction of light with '+' and '-' key
-	if(Keys::Key(VK_ADD))fAngleOfDarkness += appMain.sof(90);
-	if(Keys::Key(VK_SUBTRACT))fAngleOfDarkness -= appMain.sof(90);
+	if (Keys::Key(VK_ADD))fAngleOfDarkness += appMain.sof(90);
+	if (Keys::Key(VK_SUBTRACT))fAngleOfDarkness -= appMain.sof(90);
 	// Set the directional vector of light
-	dlSun.vDirection = glm::vec3(-sin(fAngleOfDarkness*3.1415f/180.0f), -cos(fAngleOfDarkness*3.1415f/180.0f), 0.0f);
-	
+	dlSun.vDirection = glm::vec3(-sin(fAngleOfDarkness*3.1415f / 180.0f), -cos(fAngleOfDarkness*3.1415f / 180.0f), 0.0f);
+
 	dlSun.iSkybox = 1;
 	dlSun.SetUniformData(&spMain, "sunLight");
 
@@ -177,7 +179,7 @@ void RenderScene(LPVOID lpParam)
 
 	spMain.SetUniform("vEyePosition", cCamera.vEye);
 	matShiny.SetUniformData(&spMain, "matActive");
-	
+
 	// Render a house
 
 	CAssimpModel::BindModelsVAO();
@@ -187,7 +189,7 @@ void RenderScene(LPVOID lpParam)
 
 	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 	amModels[0].RenderModel();
-	
+
 	// ... and a treasure chest
 
 	mModel = glm::translate(glm::mat4(1.0), glm::vec3(-10.0f, 17.5f, 0));
@@ -196,35 +198,52 @@ void RenderScene(LPVOID lpParam)
 	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 	amModels[1].RenderModel();
 
+	//Render cat and wolf
+	mModel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0f, 17.5, 0));
+	mModel = glm::scale(mModel, glm::vec3(10.f, 10.f, 10.f));
+
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[2].RenderModel();
+
+	mModel = glm::translate(glm::mat4(1.0), glm::vec3(-20.0f, 17.5, 0));
+	mModel = glm::scale(mModel, glm::vec3(5.f, 5.f, 5.f));
+
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[3].RenderModel();
+
 	// Render 3 rotated tori to create interesting object
 
 	tTextures[5].BindTexture();
 	glBindVertexArray(uiVAOSceneObjects);
+
 	static float fGlobalAngle = 0.0f;
 
 	FOR(i, 2)
 	{
-		glm::vec3 vCenter = glm::vec3(-40+i*40, 30, -20);
+		glm::vec3 vCenter = glm::vec3(-30 + i * 40, 30, -20);
 		mModel = glm::translate(glm::mat4(1.0), vCenter);
-		if(i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+		if (i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-		glDrawArrays(GL_TRIANGLES, 0, iTorusFaces*3);
+		glDrawArrays(GL_TRIANGLES, 0, iTorusFaces * 3);
 
-		mModel = glm::translate(glm::mat4(1.0), vCenter+glm::vec3(0.01f, 0.0f, 0.0f));
-		if(i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+		mModel = glm::translate(glm::mat4(1.0), vCenter + glm::vec3(0.01f, 0.0f, 0.0f));
+		if (i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 		mModel = glm::rotate(mModel, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-		glDrawArrays(GL_TRIANGLES, 0, iTorusFaces*3);
+		glDrawArrays(GL_TRIANGLES, 0, iTorusFaces * 3);
 
-		mModel = glm::translate(glm::mat4(1.0), vCenter+glm::vec3(0.00f, 0.01f, 0.0f));
+		mModel = glm::translate(glm::mat4(1.0), vCenter + glm::vec3(0.00f, 0.01f, 0.0f));
 
-		if(i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+		if (i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 		mModel = glm::rotate(mModel, 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-		glDrawArrays(GL_TRIANGLES, 0, iTorusFaces*3);
+		glDrawArrays(GL_TRIANGLES, 0, iTorusFaces * 3);
 	}
 
-	fGlobalAngle += appMain.sof(50.0f);
+	//fGlobalAngle += appMain.sof(10.0f);
+	fGlobalAngle += fGlobalAngleNew;
+	if (fGlobalAngle > 100)
+		fGlobalAngle = 0;
 
 	// Now we're going to render terrain
 
@@ -258,7 +277,7 @@ void RenderScene(LPVOID lpParam)
 	// ... and finally render heightmap
 	hmWorld.RenderHeightmap();
 
-	if(bDisplayNormals)
+	if (bDisplayNormals)
 	{
 		spNormalDisplayer.UseProgram();
 		spNormalDisplayer.SetUniform("fNormalLength", 1.0f);
@@ -283,7 +302,7 @@ void RenderScene(LPVOID lpParam)
 		spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 		amModels[1].RenderModel(GL_POINTS);
 
-		//Render cat and wolf
+		//Render cat and wolf again
 		mModel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0f, 17.5, 0));
 		mModel = glm::scale(mModel, glm::vec3(10.f, 10.f, 10.f));
 
@@ -300,31 +319,31 @@ void RenderScene(LPVOID lpParam)
 
 		FOR(i, 2)
 		{
-			glm::vec3 vCenter = glm::vec3(-40+i*40, 30, -20);
+			glm::vec3 vCenter = glm::vec3(-30 + i * 40, 30, -20);
 			mModel = glm::translate(glm::mat4(1.0), vCenter);
-			if(i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+			if (i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 			spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-			glDrawArrays(GL_POINTS, 0, iTorusFaces*3);
+			glDrawArrays(GL_POINTS, 0, iTorusFaces * 3);
 
-			mModel = glm::translate(glm::mat4(1.0), vCenter+glm::vec3(0.01f, 0.0f, 0.0f));
-			if(i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+			mModel = glm::translate(glm::mat4(1.0), vCenter + glm::vec3(0.01f, 0.0f, 0.0f));
+			if (i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 			mModel = glm::rotate(mModel, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 			spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-			glDrawArrays(GL_POINTS, 0, iTorusFaces*3);
+			glDrawArrays(GL_POINTS, 0, iTorusFaces * 3);
 
-			mModel = glm::translate(glm::mat4(1.0), vCenter+glm::vec3(0.00f, 0.01f, 0.0f));
+			mModel = glm::translate(glm::mat4(1.0), vCenter + glm::vec3(0.00f, 0.01f, 0.0f));
 
-			if(i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+			if (i == 0)mModel = glm::rotate(mModel, fGlobalAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 			mModel = glm::rotate(mModel, 90.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 			spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
-			glDrawArrays(GL_POINTS, 0, iTorusFaces*3);
+			glDrawArrays(GL_POINTS, 0, iTorusFaces * 3);
 		}
 
 		spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", hmWorld.GetScaleMatrix());
 		hmWorld.RenderHeightmapForNormals();
 	}
 
-	tTextures[6].BindTexture(); 
+	tTextures[6].BindTexture();
 
 	psMainParticleSystem.SetMatrices(oglControl->GetProjectionMatrix(), cCamera.vEye, cCamera.vView, cCamera.vUp);
 
@@ -334,33 +353,79 @@ void RenderScene(LPVOID lpParam)
 	cCamera.Update();
 
 	// Print something over scene
-	
+
 	spFont2D.UseProgram();
 	glDisable(GL_DEPTH_TEST);
 	spFont2D.SetUniform("matrices.projMatrix", oglControl->GetOrthoMatrix());
 
 	int w = oglControl->GetViewportWidth(), h = oglControl->GetViewportHeight();
-	
+
 	spFont2D.SetUniform("vColor", glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
 	ftFont.Print("OpenGL_5 2017-2018", 20, 20, 24);
 	ftFont.Print("Repina Anastasia BSE143", 20, 45, 24);
 
-	ftFont.PrintFormatted(20, h-30, 20, "FPS: %d", oglControl->GetFPS());
-	ftFont.PrintFormatted(20, h-80, 20, "Particles: %d", psMainParticleSystem.GetNumParticles());
+	ftFont.PrintFormatted(20, h - 30, 20, "FPS: %d", oglControl->GetFPS());
 
-	ftFont.PrintFormatted(20, h-110, 20, "Specular Intensity: %.2f (Press 'Q' and 'E' to change)", matShiny.fSpecularIntensity);
-	if(Keys::Key('Q'))matShiny.fSpecularIntensity -= appMain.sof(0.2f);
-	if(Keys::Key('E'))matShiny.fSpecularIntensity += appMain.sof(0.2f);
+	ftFont.PrintFormatted(20, h - 80, 20, "Specular Intensity: %.2f (Press 'Q' and 'E' to change)", matShiny.fSpecularIntensity);
+	if (Keys::Key('Q'))matShiny.fSpecularIntensity -= appMain.sof(0.2f);
+	if (Keys::Key('E'))matShiny.fSpecularIntensity += appMain.sof(0.2f);
 
-	ftFont.PrintFormatted(20, h-140, 20, "Specular Power: %.2f (Press 'Z' and 'C' to change)", matShiny.fSpecularPower);
-	if(Keys::Key('Z'))matShiny.fSpecularPower -= appMain.sof(8.0f);
-	if(Keys::Key('C'))matShiny.fSpecularPower += appMain.sof(8.0f);
+	ftFont.PrintFormatted(20, h - 110, 20, "Specular Power: %.2f (Press 'Z' and 'C' to change)", matShiny.fSpecularPower);
+	if (Keys::Key('Z'))matShiny.fSpecularPower -= appMain.sof(8.0f);
+	if (Keys::Key('C'))matShiny.fSpecularPower += appMain.sof(8.0f);
 
-	ftFont.PrintFormatted(20, h-200, 20, "Displaying Normals: %s (Press 'N' to toggle)", bDisplayNormals ? "Yes" : "Nope");
-	if(Keys::Onekey('N'))bDisplayNormals = !bDisplayNormals;
+	ftFont.PrintFormatted(20, h - 140, 20, "Displaying Normals: %s (Press 'N' to toggle)", bDisplayNormals ? "Yes" : "Nope");
+	if (Keys::Onekey('N'))bDisplayNormals = !bDisplayNormals;
 
-	glEnable(GL_DEPTH_TEST);	
-	if(Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
+	ftFont.PrintFormatted(20, h - 170, 20, "Angle of darkness: (Press '+', '-' to change)");
+
+	ftFont.PrintFormatted(900, h - 80, 20, "Color change: (Press '1', '2', '3' to change)");
+	if (Keys::Key('1'))
+	{
+		psMainParticleSystem.SetColor(glm::vec3(1.0f, 0.0f, 0.f)); // red
+	}
+	if (Keys::Key('2'))
+	{
+		psMainParticleSystem.SetColor(glm::vec3(0.f, 1.f, 0.f)); // green
+	}
+	if (Keys::Key('3'))
+	{
+		psMainParticleSystem.SetColor(glm::vec3(0.f, 0.f, 1.f)); // blue
+	}
+	ftFont.PrintFormatted(900, h - 110, 20, "Particles number %d (Press '4', '5' to change)", psMainParticleSystem.GetNumParticles());
+	if (Keys::Key('4'))
+	{
+		psMainParticleSystem.SetNumParticles(psMainParticleSystem.GetNumParticles() + 500);
+	}
+	if (Keys::Key('5'))
+	{
+		psMainParticleSystem.SetNumParticles(psMainParticleSystem.GetNumParticles() - 500);
+	}
+	ftFont.PrintFormatted(900, h - 140, 20, "Speed particles: %.2f (Press '6', '7' to change)", psMainParticleSystem.GetSpeed());
+	if (Keys::Key('6'))
+	{
+		glm::vec3 speed = psMainParticleSystem.GetSpeed();
+		speed += 0.1;
+		psMainParticleSystem.SetSpeed(speed);
+	}
+	if (Keys::Key('7'))
+	{
+		glm::vec3 speed = psMainParticleSystem.GetSpeed();
+		speed -= 0.1;
+		psMainParticleSystem.SetSpeed(speed);
+	}
+	ftFont.PrintFormatted(900, h - 170, 20, "Speed torus: %.2f (Press '8', '9' to change)", fGlobalAngleNew);
+	if (Keys::Key('8'))
+	{
+		fGlobalAngleNew += appMain.sof(1.0f);
+	}
+	if (Keys::Key('9'))
+	{
+		fGlobalAngleNew -= appMain.sof(1.0f);
+	}
+
+	glEnable(GL_DEPTH_TEST);
+	if (Keys::Onekey(VK_ESCAPE))PostQuitMessage(0);
 
 	oglControl->SwapBuffers();
 }
