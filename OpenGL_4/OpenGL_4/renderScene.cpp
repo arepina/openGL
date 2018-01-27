@@ -42,7 +42,7 @@ position, 2 floats for texture coordinate and
 CVertexBufferObject vboSceneObjects, vboCubeInd, vboCube;
 UINT uiVAOs[1]; // Only one VAO now
 
-CTexture tTextures[NUMTEXTURES];
+//CTexture tTextures[NUMTEXTURES];
 CFlyingCamera cCamera;
 
 CSkybox sbMainSkybox;
@@ -50,7 +50,7 @@ CObjModel mdlHouse;
 CDirectionalLight dlSun;
 
 CMaterial matShiny;
-CAssimpModel amModels[3];
+CAssimpModel amModels[10];
 
 int housesNum = 6;
 Hidden hidden = Hidden(housesNum);
@@ -121,8 +121,7 @@ void InitScene(LPVOID lpParam)
 	amModels[0].LoadModelFromFile("data\\models\\house\\house.3ds");
 	amModels[1].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
 	amModels[2].LoadModelFromFile("data\\models\\cat\\cat.obj");
-	//amModels[2].LoadModelFromFile("data\\models\\Bike\\KTM.obj");
-	//amModels[2].LoadModelFromFile("data\\models\\Wolf\\Wolf.obj");
+	amModels[3].LoadModelFromFile("data\\models\\Wolf\\Wolf.obj");
 
 	CAssimpModel::FinalizeVBO();
 
@@ -216,7 +215,7 @@ void RenderScene(LPVOID lpParam)
 		}
 	}
 
-	//Render cat
+	//Render cat and wolf
 
 	CAssimpModel::BindModelsVAO();
 	
@@ -228,7 +227,14 @@ void RenderScene(LPVOID lpParam)
 
 		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 		amModels[2].RenderModel();
-	}
+
+		glm::vec3 vPos1 = glm::vec3(-70.0f, 0.0, 50 + i * -60.0f);
+		glm::mat4 mModel1 = glm::translate(glm::mat4(1.0), vPos1);
+		mModel1 = glm::scale(mModel1, glm::vec3(5.f, 5.f, 5.f));
+
+		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel1);
+		amModels[3].RenderModel();
+	}	
 
 	cCamera.Update();
 
