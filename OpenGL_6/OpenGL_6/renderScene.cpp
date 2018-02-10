@@ -196,7 +196,7 @@ void InitScene(LPVOID lpParam)
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(40.0f, 17.0f, 0), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(40.0f, 47.0f, 0), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
 	plLight1 = CPointLight(glm::vec3(1.f, 0.f, 0.f), glm::vec3(100.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
 	plLight2 = CPointLight(glm::vec3(0.f, 1.f, 0.f), glm::vec3(60.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
 	plLight3 = CPointLight(glm::vec3(0.f, 0.f, 1.f), glm::vec3(20.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
