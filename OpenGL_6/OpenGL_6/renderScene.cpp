@@ -22,6 +22,8 @@
 
 #include "static_geometry.h"
 
+#include "pointLight.h"
+
 #include "particle_system_tf.h"
 
 CVertexBufferObject vboSceneObjects;
@@ -35,7 +37,7 @@ CFlyingCamera cCamera;
 CDirectionalLight dlSun;
 
 CMaterial matShiny;
-CAssimpModel amModels[4];
+CAssimpModel amModels[10];
 
 CMultiLayeredHeightmap hmWorld;
 
@@ -58,6 +60,11 @@ CVertexBufferObject vboShadowMapQuad;
 UINT uiVAOShadowMapQuad;
 
 CTexture rotationTexture;
+
+CPointLight plLight;
+CPointLight plLight1;
+CPointLight plLight2;
+CPointLight plLight3;
 
 /*-----------------------------------------------
 
@@ -120,6 +127,9 @@ void InitScene(LPVOID lpParam)
 	amModels[1].LoadModelFromFile("data\\models\\Arrow\\Arrow.obj");
 	amModels[2].LoadModelFromFile("data\\models\\fountainOBJ\\fountain.obj");
 	amModels[3].LoadModelFromFile("data\\models\\ConcreteColumn_OBJ\\ConcreteColumn.obj");
+	amModels[4].LoadModelFromFile("data\\models\\house\\house.3ds");
+	amModels[5].LoadModelFromFile("data\\models\\cat\\cat.obj");
+	amModels[6].LoadModelFromFile("data\\models\\Wolf\\Wolf.obj");
 	
 	CAssimpModel::FinalizeVBO();
 	CMultiLayeredHeightmap::LoadTerrainShaderProgram();
@@ -185,6 +195,11 @@ void InitScene(LPVOID lpParam)
 	rotationTexture.CreateRotationTexture(64, 64);
 
 	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(40.0f, 17.0f, 0), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+	plLight1 = CPointLight(glm::vec3(1.f, 0.f, 0.f), glm::vec3(100.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
+	plLight2 = CPointLight(glm::vec3(0.f, 1.f, 0.f), glm::vec3(60.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
+	plLight3 = CPointLight(glm::vec3(0.f, 0.f, 1.f), glm::vec3(20.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
 }
 
 /*-----------------------------------------------
@@ -261,6 +276,33 @@ void RenderScene(LPVOID lpParam)
 		glm::mat4 depthMVP = mPROJ * mViewFromLight * mModel;
 		spShadowMapper.SetUniform("depthMVP", depthMVP);
 		amModels[2].RenderModel();
+
+		// Render a house
+
+		glm::mat4 mModel = glm::translate(glm::mat4(1.0), glm::vec3(40.0f, 17.0f, 0));
+		mModel = glm::scale(mModel, glm::vec3(8, 8, 8));
+
+		spShadowMapper.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+		depthMVP = mPROJ * mViewFromLight * mModel;
+		spShadowMapper.SetUniform("depthMVP", depthMVP);
+		amModels[4].RenderModel();
+
+		//Render cat and wolf
+		mModel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0f, 17.5, 0));
+		mModel = glm::scale(mModel, glm::vec3(10.f, 10.f, 10.f));
+
+		spShadowMapper.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+		depthMVP = mPROJ * mViewFromLight * mModel;
+		spShadowMapper.SetUniform("depthMVP", depthMVP);
+		amModels[5].RenderModel();
+
+		mModel = glm::translate(glm::mat4(1.0), glm::vec3(-20.0f, 17.5, 0));
+		mModel = glm::scale(mModel, glm::vec3(5.f, 5.f, 5.f));
+
+		spShadowMapper.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+		depthMVP = mPROJ * mViewFromLight * mModel;
+		spShadowMapper.SetUniform("depthMVP", depthMVP);
+		amModels[6].RenderModel();
 
 		// Render some pillars
 
@@ -353,6 +395,11 @@ void RenderScene(LPVOID lpParam)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	oglControl->ResizeOpenGLViewportFull();
 
+	plLight.SetUniformData(&spMain, "pointLight");
+	plLight1.SetUniformData(&spMain, "pointLight1");
+	plLight2.SetUniformData(&spMain, "pointLight2");
+	plLight3.SetUniformData(&spMain, "pointLight3");
+
 	// Render skybox
 
 	spSkybox.UseProgram();
@@ -415,6 +462,27 @@ void RenderScene(LPVOID lpParam)
 
 	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 	amModels[2].RenderModel();
+
+	// Render a house
+
+	mModel = glm::translate(glm::mat4(1.0), glm::vec3(110.0f, 25.0f, -30));
+	mModel = glm::scale(mModel, glm::vec3(8, 8, 8));
+
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[4].RenderModel();
+
+	//Render cat and wolf
+	mModel = glm::translate(glm::mat4(1.0), glm::vec3(-30.0f, 12, -20));
+	mModel = glm::scale(mModel, glm::vec3(10.f, 10.f, 10.f));
+
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[5].RenderModel();
+
+	mModel = glm::translate(glm::mat4(1.0), glm::vec3(-20.0f, 12, -20));
+	mModel = glm::scale(mModel, glm::vec3(5.f, 5.f, 5.f));
+
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[6].RenderModel();
 
 	// Render some pillars
 

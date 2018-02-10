@@ -123,6 +123,7 @@
     <ClCompile Include="md2model.cpp" />
     <ClCompile Include="openGLControl.cpp" />
     <ClCompile Include="particle_system_tf.cpp" />
+    <ClCompile Include="pointLight.cpp" />
     <ClCompile Include="renderScene.cpp" />
     <ClCompile Include="shaders.cpp" />
     <ClCompile Include="skybox.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="md2model.h" />
     <ClInclude Include="openGLControl.h" />
     <ClInclude Include="particle_system_tf.h" />
+    <ClInclude Include="pointLight.h" />
     <ClInclude Include="shaders.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="static_geometry.h" />
