@@ -289,7 +289,7 @@ void LoadAllTextures()
 {
 	// Load textures
 
-	string sTextureNames[] = {"fungus.dds", "sand_grass_02.jpg", "rock_2_4w.jpg", "sand.jpg", "path.png", "scifi_metal.jpg", "particle.bmp"};
+	string sTextureNames[] = {"fungus.dds", "sand_grass_02.jpg", "rock_2_4w.jpg", "sand.jpg", "path.png", "scifi_metal.jpg", "fire.bmp", "particle.bmp" };
 
 	FOR(i, NUMTEXTURES)
 	{

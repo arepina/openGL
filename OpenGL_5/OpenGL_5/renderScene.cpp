@@ -105,6 +105,7 @@ void InitScene(LPVOID lpParam)
 	amModels[1].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
 	amModels[2].LoadModelFromFile("data\\models\\cat\\cat.obj");
 	amModels[3].LoadModelFromFile("data\\models\\Wolf\\Wolf.obj");
+	amModels[4].LoadModelFromFile("data\\models\\fountainOBJ\\fountain.obj");
 
 	CAssimpModel::FinalizeVBO();
 	CMultiLayeredHeightmap::LoadTerrainShaderProgram();
@@ -115,14 +116,14 @@ void InitScene(LPVOID lpParam)
 	psMainParticleSystem.InitalizeParticleSystem();
 
 	psMainParticleSystem.SetGeneratorProperties(
-		glm::vec3(-10.0f, 17.5f, 0.0f), // Where the particles are generated
-		glm::vec3(-5, 0, -5), // Minimal velocity
-		glm::vec3(5, 20, 5), // Maximal velocity
-		glm::vec3(0, -5, 0), // Gravity force applied to particles
-		glm::vec3(0.1f, 0.f, 0.f), // Color
+		glm::vec3(-90.87f, 53.15f, -33.27f), // Where the particles are generated
+		glm::vec3(-10, 0, -10), // Minimal velocity
+		glm::vec3(10, 20, 10), // Maximal velocity
+		glm::vec3(0, -20, 0), // Gravity force applied to particles
+		glm::vec3(0.0f, 0.25f, 1.0f), // Color (dark blue)
 		1.5f, // Minimum lifetime in seconds
 		3.0f, // Maximum lifetime in seconds
-		0.75f, // Rendered size
+		0.25f, // Rendered size
 		0.02f, // Spawn every 0.05 seconds
 		30); // And spawn 30 particles
 }
@@ -210,6 +211,14 @@ void RenderScene(LPVOID lpParam)
 
 	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 	amModels[3].RenderModel();
+
+	// Render fountain
+
+	mModel = glm::translate(glm::mat4(1.0), glm::vec3(-90.87f, 35.15f, -33.27f));
+	mModel = glm::scale(mModel, glm::vec3(0.5f, 0.5f, 0.5f));
+
+	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+	amModels[4].RenderModel();
 
 	// Render 3 rotated tori to create interesting object
 
@@ -314,6 +323,14 @@ void RenderScene(LPVOID lpParam)
 
 		spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
 		amModels[3].RenderModel(GL_POINTS);
+
+		// Render fountain again
+
+		mModel = glm::translate(glm::mat4(1.0), glm::vec3(-90.87f, 35.15f, -33.27f));
+		mModel = glm::scale(mModel, glm::vec3(0.5f, 0.5f, 0.5f));
+
+		spNormalDisplayer.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
+		amModels[4].RenderModel(GL_POINTS);
 
 		glBindVertexArray(uiVAOSceneObjects);
 
