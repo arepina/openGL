@@ -36,7 +36,7 @@ bool PrepareShaderPrograms()
 
 	string sShaderFileNames[] = { "main_shader.vert", "main_shader.frag", "ortho2D.vert", "ortho2D.frag", "font2D.frag", "dirLight.frag",
 		"normal_displayer.vert", "normal_displayer.geom", "normal_displayer.frag", "md2anim.vert", "skybox.vert", "skybox.frag",
-		"shadowMapper.vert", "shadowMapper.frag", "shadowMapRender.vert", "shadowMapRender.frag", "shadows.frag"
+		"shadowMapper.vert", "shadowMapper.frag", "shadowMapRender.vert", "shadowMapRender.frag", "shadows.frag", "pointLight.frag"
 	};
 
 	FOR(i, NUMSHADERS)
@@ -52,6 +52,7 @@ bool PrepareShaderPrograms()
 	spMain.AddShaderToProgram(&shShaders[0]);
 	spMain.AddShaderToProgram(&shShaders[1]);
 	spMain.AddShaderToProgram(&shShaders[5]);
+	spMain.AddShaderToProgram(&shShaders[17]);
 	spMain.AddShaderToProgram(&shShaders[16]); // Add shadows support
 	if (!spMain.LinkProgram())return false;
 
@@ -75,6 +76,7 @@ bool PrepareShaderPrograms()
 	spMD2Animation.AddShaderToProgram(&shShaders[9]);
 	spMD2Animation.AddShaderToProgram(&shShaders[1]);
 	spMD2Animation.AddShaderToProgram(&shShaders[5]);
+	spMD2Animation.AddShaderToProgram(&shShaders[17]);
 	spMD2Animation.AddShaderToProgram(&shShaders[16]);
 	if (!spMD2Animation.LinkProgram())return false;
 

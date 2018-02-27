@@ -35,6 +35,9 @@ CSkybox sbMainSkybox;
 CFlyingCamera cCamera;
 
 CDirectionalLight dlSun;
+CPointLight plLight;
+CPointLight plLight1;
+CPointLight plLight2;
 
 CMaterial matShiny;
 CAssimpModel amModels[10];
@@ -60,11 +63,6 @@ CVertexBufferObject vboShadowMapQuad;
 UINT uiVAOShadowMapQuad;
 
 CTexture rotationTexture;
-
-CPointLight plLight;
-CPointLight plLight1;
-CPointLight plLight2;
-CPointLight plLight3;
 
 /*-----------------------------------------------
 
@@ -122,6 +120,10 @@ void InitScene(LPVOID lpParam)
 	sbMainSkybox.LoadSkybox("data\\skyboxes\\delirious\\", "delirious_front.jpg", "delirious_back.jpg", "delirious_right.jpg", "delirious_left.jpg", "delirious_top.jpg", "delirious_top.jpg");
 
 	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f)/2, -sqrt(2.0f)/2, 0), 0.5f, 0);
+
+	plLight = CPointLight(glm::vec3(1, 0, 0), glm::vec3(-35.0f, 15, -20), 2, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+	plLight1 = CPointLight(glm::vec3(0, 1, 0), glm::vec3(-20.0f, 15, -20), 2, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+	plLight2 = CPointLight(glm::vec3(0, 0, 1), glm::vec3(-5.0f, 15, -20), 2, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
 
 	amModels[0].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
 	amModels[1].LoadModelFromFile("data\\models\\Arrow\\Arrow.obj");
@@ -194,12 +196,7 @@ void InitScene(LPVOID lpParam)
 
 	rotationTexture.CreateRotationTexture(64, 64);
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-	plLight = CPointLight(glm::vec3(0.55f, 0.27f, 0.12f), glm::vec3(40.0f, 47.0f, 0), 0.15f, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
-	plLight1 = CPointLight(glm::vec3(1.f, 0.f, 0.f), glm::vec3(100.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
-	plLight2 = CPointLight(glm::vec3(0.f, 1.f, 0.f), glm::vec3(60.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
-	plLight3 = CPointLight(glm::vec3(0.f, 0.f, 1.f), glm::vec3(20.0f, 100.0f, -100.0f), 0.15f, 0.3f, 0.007f, 0.00001f);//luminescence of objects params
+	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);	
 }
 
 /*-----------------------------------------------
@@ -395,10 +392,6 @@ void RenderScene(LPVOID lpParam)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	oglControl->ResizeOpenGLViewportFull();
 
-	plLight.SetUniformData(&spMain, "pointLight");
-	plLight1.SetUniformData(&spMain, "pointLight1");
-	plLight2.SetUniformData(&spMain, "pointLight2");
-	plLight3.SetUniformData(&spMain, "pointLight3");
 
 	// Render skybox
 
@@ -435,6 +428,10 @@ void RenderScene(LPVOID lpParam)
 	// Set the directional vector of light
 	dlSun.vDirection = glm::vec3(-sin(fAngleOfDarkness*3.1415f/180.0f), -cos(fAngleOfDarkness*3.1415f/180.0f), 0.0f);
 	dlSun.SetUniformData(&spMain, "sunLight");
+
+	plLight.SetUniformData(&spMain, "pointLight");
+	plLight1.SetUniformData(&spMain, "pointLight1");
+	plLight2.SetUniformData(&spMain, "pointLight2");
 
 	spMain.SetUniform("vEyePosition", cCamera.vEye);
 	// I'm always using this shiny material, no matter what I render, it would be nice to change it sometimes :P
@@ -550,6 +547,9 @@ void RenderScene(LPVOID lpParam)
 	spMD2Animation.SetUniform("vColor", glm::vec4(1, 1, 1, 1));
 
 	dlSun.SetUniformData(&spMD2Animation, "sunLight");
+	plLight.SetUniformData(&spMD2Animation, "pointLight");
+	plLight1.SetUniformData(&spMD2Animation, "pointLight1");
+	plLight2.SetUniformData(&spMD2Animation, "pointLight2");
 	matShiny.SetUniformData(&spMD2Animation, "matActive");
 
 	mModel = glm::translate(glm::mat4(1.0), glm::vec3(vModelPosition));
@@ -608,6 +608,9 @@ void RenderScene(LPVOID lpParam)
 	spTerrain->SetUniform("vColor", glm::vec4(1, 1, 1, 1));
 
 	dlSun.SetUniformData(spTerrain, "sunLight");
+	plLight.SetUniformData(spTerrain, "pointLight");
+	plLight1.SetUniformData(spTerrain, "pointLight1");
+	plLight2.SetUniformData(spTerrain, "pointLight2");
 
 	spTerrain->SetUniform("matrices.depthBiasMVP", mDepthBiasMVP);
 
@@ -633,7 +636,7 @@ void RenderScene(LPVOID lpParam)
 	int w = oglControl->GetViewportWidth(), h = oglControl->GetViewportHeight();
 	
 	spFont2D.SetUniform("vColor", glm::vec4(0.9f, 0.9f, 0.9f, 1.0f));
-	ftFont.Print("www.mbsoftworks.sk", 20, 20, 24);
+	ftFont.Print("Anastasia Repina BSE143", 20, 20, 24);
 	ftFont.PrintFormatted(20, h-30, 20, "FPS: %d", oglControl->GetFPS());
 	ftFont.PrintFormatted(20, h-55, 20, "Shadows: %s ('R' to toggle)", bShadowsOn ? "On" : "Off");
 	ftFont.PrintFormatted(20, h-80, 20, "Display Shadow Map: %s ('M' to toggle)", bDisplayShadowMap ? "Yes" : "Nope");
@@ -685,6 +688,21 @@ void RenderScene(LPVOID lpParam)
 		fModelRotation += appMain.sof(135.0f);
 	if(Keys::Key(VK_RIGHT))
 		fModelRotation -= appMain.sof(135.0f);
+	if (Keys::Key('1'))
+	{
+		if(plLight.fAmbient == 0)plLight.fAmbient = 2;
+		else plLight.fAmbient = 0;
+	}
+	if (Keys::Key('2'))
+	{
+		if (plLight1.fAmbient == 0)plLight1.fAmbient = 2;
+		else plLight1.fAmbient = 0;
+	}
+	if (Keys::Key('3'))
+	{
+		if (plLight2.fAmbient == 0)plLight2.fAmbient = 2;
+		else plLight2.fAmbient = 0;
+	}
 
 	vModelPosition.y = hmWorld.GetHeightFromRealVector(vModelPosition)+8.0f;
 

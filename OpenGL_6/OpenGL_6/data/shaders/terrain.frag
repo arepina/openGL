@@ -11,15 +11,23 @@ uniform sampler2D shadowMap;
 uniform vec4 vColor;
 
 #include "dirLight.frag"
+#include "pointLight.frag"
 
 uniform DirectionalLight sunLight;
+uniform PointLight pointLight;
+uniform PointLight pointLight1;
+uniform PointLight pointLight2;
+
 uniform float fRenderHeight;
 uniform float fMaxTextureU;
 uniform float fMaxTextureV;
 
+
 out vec4 outputColor;
 uniform vec3 vEyePosition;
 uniform Material matActive;
+
+
 
 #include "shadows.frag"
 
@@ -76,7 +84,11 @@ void main()
 	float visibility = GetVisibility(shadowMap, ShadowCoord);
 
 	vec4 vDirLightColor = GetDirectionalLightColor(sunLight, vNormal, visibility);
-	//vec4 vSpecularColor = GetSpecularColor(vWorldPos, vEyePosition, matActive, sunLight, vNormalized, visibility);
+	//vec4 vPointlightColor = getPointLightColor(pointLight, vWorldPos, vNormalized, visibility);
+//vec4 vPointlightColor1 = getPointLightColor(pointLight1, vWorldPos, vNormalized, visibility);
+//vec4 vPointlightColor2 = getPointLightColor(pointLight2, vWorldPos, vNormalized, visibility);
+	// vec4 vSpecularColor = GetSpecularColor(vWorldPos, vEyePosition, matActive, sunLight, vNormalized, visibility);
 	
-	outputColor = vMixedColor * vDirLightColor;// + vSpecularColor;
+	 outputColor = vMixedColor * vDirLightColor;
+	//outputColor = vMixedColor * (vDirLightColor + vPointlightColor + vPointlightColor1 + vPointlightColor2);
 }                      
