@@ -41,8 +41,6 @@ void main()
 vec4 vPointlightColor1 = getPointLightColor(pointLight1, vWorldPos, vNormalized, visibility);
 vec4 vPointlightColor2 = getPointLightColor(pointLight2, vWorldPos, vNormalized, visibility);
   //vec4 vSpecularColor = GetSpecularColor(vWorldPos, vEyePosition, matActive, sunLight, vNormalized, visibility);
-
-
 	
   //outputColor = vMixedColor * vDiffuseColor;// + vSpecularColor;
 

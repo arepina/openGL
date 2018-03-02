@@ -38,6 +38,7 @@ CDirectionalLight dlSun;
 CPointLight plLight;
 CPointLight plLight1;
 CPointLight plLight2;
+CPointLight plNone;
 
 CMaterial matShiny;
 CAssimpModel amModels[10];
@@ -63,6 +64,8 @@ CVertexBufferObject vboShadowMapQuad;
 UINT uiVAOShadowMapQuad;
 
 CTexture rotationTexture;
+
+bool lightsOn = true;
 
 /*-----------------------------------------------
 
@@ -121,9 +124,10 @@ void InitScene(LPVOID lpParam)
 
 	dlSun = CDirectionalLight(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(sqrt(2.0f)/2, -sqrt(2.0f)/2, 0), 0.5f, 0);
 
-	plLight = CPointLight(glm::vec3(1, 0, 0), glm::vec3(-35.0f, 15, -20), 2, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
-	plLight1 = CPointLight(glm::vec3(0, 1, 0), glm::vec3(-20.0f, 15, -20), 2, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
-	plLight2 = CPointLight(glm::vec3(0, 0, 1), glm::vec3(-5.0f, 15, -20), 2, 0.3f, 0.007f, 0.00008f);//luminescence of objects params
+	plLight = CPointLight(glm::vec3(1, 0, 0), glm::vec3(-35.0f, 15, -20), 10.f, 1.f, 0.007f, 0.05f);//luminescence of objects params
+	plLight1 = CPointLight(glm::vec3(0, 1, 0), glm::vec3(-20.0f, 15, -20), 10.f, 1.f, 0.007f, 0.05f);//luminescence of objects params
+	plLight2 = CPointLight(glm::vec3(0, 0, 1), glm::vec3(-100 + 47.0f, 10, -30.0f - 47.0f), 10.f, 1.f, 0.007f, 0.05f);//luminescence of objects params
+	plNone = CPointLight(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), 0, 10, 10, 10);//luminescence of objects params
 
 	amModels[0].LoadModelFromFile("data\\models\\treasure_chest_obj\\treasure_chest.obj");
 	amModels[1].LoadModelFromFile("data\\models\\Arrow\\Arrow.obj");
@@ -233,7 +237,7 @@ void RenderScene(LPVOID lpParam)
 
 	glm::mat4 mDepthBiasMVP;
 	glm::mat4 mModel;
-
+	glCullFace(GL_BACK);
 	if(bShadowsOn) // So if the shadows are on
 	{
 		// We are going to render scene from the light's point of view
@@ -340,7 +344,7 @@ void RenderScene(LPVOID lpParam)
 				continue;
 			}
 			mModel = glm::translate(glm::mat4(1.0), arrows[i].vPos);
-			mModel = glm::rotate(mModel, arrows[i].fRotAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+			mModel = glm::rotate(mModel, arrows[i].fRotAngle * 3.1415f / 180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 			mModel = glm::scale(mModel, glm::vec3(12.0f, 12.0f, 6.0f));
 			
 			depthMVP = mPROJ * mViewFromLight * mModel;
@@ -352,8 +356,8 @@ void RenderScene(LPVOID lpParam)
 		// Render extra arrow that shows direction of light
 
 		mModel = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 80.0f, 0.0f));
-		mModel = glm::rotate(mModel, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-		mModel = glm::rotate(mModel, -fAngleOfDarkness, glm::vec3(0.0f, 1.0f, 0.0f));
+		mModel = glm::rotate(mModel, 90.0f  * 3.1415f / 180.f, glm::vec3(1.0f, 0.0f, 0.0f));
+		mModel = glm::rotate(mModel, -fAngleOfDarkness * 3.1415f / 180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mModel = glm::scale(mModel, glm::vec3(20.0f, 20.0f, 10.0f));
 
 		depthMVP = mPROJ * mViewFromLight * mModel;
@@ -364,8 +368,8 @@ void RenderScene(LPVOID lpParam)
 		// Render the Hobo Goblin
 
 		mModel = glm::translate(glm::mat4(1.0), glm::vec3(vModelPosition));
-		mModel = glm::rotate(mModel, fModelRotation, glm::vec3(0, 1, 0));
-		mModel = glm::rotate(mModel, -90.0f, glm::vec3(1, 0, 0));
+		mModel = glm::rotate(mModel, fModelRotation * 3.1415f / 180.f, glm::vec3(0, 1, 0));
+		mModel = glm::rotate(mModel, -90.0f * 3.1415f / 180.f, glm::vec3(1, 0, 0));
 		mModel = glm::scale(mModel, glm::vec3(0.35f, 0.35f, 0.35f));
 
 		depthMVP = mPROJ * mViewFromLight * mModel;
@@ -428,10 +432,17 @@ void RenderScene(LPVOID lpParam)
 	// Set the directional vector of light
 	dlSun.vDirection = glm::vec3(-sin(fAngleOfDarkness*3.1415f/180.0f), -cos(fAngleOfDarkness*3.1415f/180.0f), 0.0f);
 	dlSun.SetUniformData(&spMain, "sunLight");
-
-	plLight.SetUniformData(&spMain, "pointLight");
-	plLight1.SetUniformData(&spMain, "pointLight1");
-	plLight2.SetUniformData(&spMain, "pointLight2");
+	if (lightsOn)
+	{
+		plLight.SetUniformData(&spMain, "pointLight");
+		plLight1.SetUniformData(&spMain, "pointLight1");
+		plLight2.SetUniformData(&spMain, "pointLight2");
+	}
+	else {
+		plNone.SetUniformData(&spMain, "pointLight");
+		plNone.SetUniformData(&spMain, "pointLight1");
+		plNone.SetUniformData(&spMain, "pointLight2");
+	}
 
 	spMain.SetUniform("vEyePosition", cCamera.vEye);
 	// I'm always using this shiny material, no matter what I render, it would be nice to change it sometimes :P
@@ -517,7 +528,7 @@ void RenderScene(LPVOID lpParam)
 			continue;
 		}
 		mModel = glm::translate(glm::mat4(1.0), arrows[i].vPos);
-		mModel = glm::rotate(mModel, arrows[i].fRotAngle, glm::vec3(0.0f, 1.0f, 0.0f));
+		mModel = glm::rotate(mModel, arrows[i].fRotAngle * 3.1415f / 180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 		mModel = glm::scale(mModel, glm::vec3(12.0f, 12.0f, 6.0f));
 
 		spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
@@ -530,8 +541,8 @@ void RenderScene(LPVOID lpParam)
 	// Render extra arrow that shows direction of light
 
 	mModel = glm::translate(glm::mat4(1.0), glm::vec3(0.0f, 80.0f, 0.0f));
-	mModel = glm::rotate(mModel, 90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-	mModel = glm::rotate(mModel, -fAngleOfDarkness, glm::vec3(0.0f, 1.0f, 0.0f));
+	mModel = glm::rotate(mModel, 90.0f * 3.1415f / 180.f, glm::vec3(1.0f, 0.0f, 0.0f));
+	mModel = glm::rotate(mModel, -fAngleOfDarkness * 3.1415f / 180.f, glm::vec3(0.0f, 1.0f, 0.0f));
 	mModel = glm::scale(mModel, glm::vec3(20.0f, 20.0f, 10.0f));
 
 	spMain.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
@@ -547,14 +558,23 @@ void RenderScene(LPVOID lpParam)
 	spMD2Animation.SetUniform("vColor", glm::vec4(1, 1, 1, 1));
 
 	dlSun.SetUniformData(&spMD2Animation, "sunLight");
-	plLight.SetUniformData(&spMD2Animation, "pointLight");
-	plLight1.SetUniformData(&spMD2Animation, "pointLight1");
-	plLight2.SetUniformData(&spMD2Animation, "pointLight2");
+	if (lightsOn)
+	{
+		plLight.SetUniformData(&spMD2Animation, "pointLight");
+		plLight1.SetUniformData(&spMD2Animation, "pointLight1");
+		plLight2.SetUniformData(&spMD2Animation, "pointLight2");
+	}
+	else {
+		plNone.SetUniformData(&spMD2Animation, "pointLight");
+		plNone.SetUniformData(&spMD2Animation, "pointLight1");
+		plNone.SetUniformData(&spMD2Animation, "pointLight2");
+	}
+
 	matShiny.SetUniformData(&spMD2Animation, "matActive");
 
 	mModel = glm::translate(glm::mat4(1.0), glm::vec3(vModelPosition));
-	mModel = glm::rotate(mModel, fModelRotation, glm::vec3(0, 1, 0));
-	mModel = glm::rotate(mModel, -90.0f, glm::vec3(1, 0, 0));
+	mModel = glm::rotate(mModel, fModelRotation * 3.1415f / 180.f, glm::vec3(0, 1, 0));
+	mModel = glm::rotate(mModel, -90.0f * 3.1415f / 180.f, glm::vec3(1, 0, 0));
 	mModel = glm::scale(mModel, glm::vec3(0.35f, 0.35f, 0.35f));
 
 	spMD2Animation.SetModelAndNormalMatrix("matrices.modelMatrix", "matrices.normalMatrix", mModel);
@@ -608,9 +628,17 @@ void RenderScene(LPVOID lpParam)
 	spTerrain->SetUniform("vColor", glm::vec4(1, 1, 1, 1));
 
 	dlSun.SetUniformData(spTerrain, "sunLight");
-	plLight.SetUniformData(spTerrain, "pointLight");
-	plLight1.SetUniformData(spTerrain, "pointLight1");
-	plLight2.SetUniformData(spTerrain, "pointLight2");
+	if (lightsOn)
+	{
+		plLight.SetUniformData(spTerrain, "pointLight");
+		plLight1.SetUniformData(spTerrain, "pointLight1");
+		plLight2.SetUniformData(spTerrain, "pointLight2");
+	}
+	else {
+		plNone.SetUniformData(spTerrain, "pointLight");
+		plNone.SetUniformData(spTerrain, "pointLight1");
+		plNone.SetUniformData(spTerrain, "pointLight2");
+	}
 
 	spTerrain->SetUniform("matrices.depthBiasMVP", mDepthBiasMVP);
 
@@ -645,7 +673,7 @@ void RenderScene(LPVOID lpParam)
 	ftFont.PrintFormatted(20, h-155, 20, "Move with arrow keys, shoot with SPACE ;)");
 	ftFont.PrintFormatted(20, h-180, 20, "Use + and - to play with direction of light");
 	ftFont.PrintFormatted(20, h-205, 20, "(the arrow in the sky shows direction of light)");
-
+	ftFont.PrintFormatted(20, h-230, 20, "O - on/off light, u/i - x move, y/t - y move, j/h - z move");
 	if(bDisplayShadowMap)
 	{
 		// Display shadow map
@@ -687,21 +715,46 @@ void RenderScene(LPVOID lpParam)
 	if(Keys::Key(VK_LEFT))
 		fModelRotation += appMain.sof(135.0f);
 	if(Keys::Key(VK_RIGHT))
-		fModelRotation -= appMain.sof(135.0f);
-	if (Keys::Key('1'))
+		fModelRotation -= appMain.sof(135.0f);	
+	if (Keys::Onekey('O'))
 	{
-		if(plLight.fAmbient == 0)plLight.fAmbient = 2;
-		else plLight.fAmbient = 0;
+		lightsOn = !lightsOn;
 	}
-	if (Keys::Key('2'))
+	if (Keys::Key('U'))
 	{
-		if (plLight1.fAmbient == 0)plLight1.fAmbient = 2;
-		else plLight1.fAmbient = 0;
+		plLight.vPosition.x += 5;
+		plLight1.vPosition.x += 5;
+		plLight2.vPosition.x += 5;
 	}
-	if (Keys::Key('3'))
+	if (Keys::Key('I'))
 	{
-		if (plLight2.fAmbient == 0)plLight2.fAmbient = 2;
-		else plLight2.fAmbient = 0;
+		plLight.vPosition.x -= 5;
+		plLight1.vPosition.x -= 5;
+		plLight2.vPosition.x -= 5;
+	}
+	if (Keys::Key('Y'))
+	{
+		plLight.vPosition.y += 5;
+		plLight1.vPosition.y += 5;
+		plLight2.vPosition.y += 5;
+	}
+	if (Keys::Key('T'))
+	{
+		plLight.vPosition.y -= 5;
+		plLight1.vPosition.y -= 5;
+		plLight2.vPosition.y -= 5;
+	}
+	if (Keys::Key('J'))
+	{
+		plLight.vPosition.z += 5;
+		plLight1.vPosition.z += 5;
+		plLight2.vPosition.z += 5;
+	}
+	if (Keys::Key('H'))
+	{
+		plLight.vPosition.z -= 5;
+		plLight1.vPosition.z -= 5;
+		plLight2.vPosition.z -= 5;
 	}
 
 	vModelPosition.y = hmWorld.GetHeightFromRealVector(vModelPosition)+8.0f;
