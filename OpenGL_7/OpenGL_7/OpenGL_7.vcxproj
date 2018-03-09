@@ -140,6 +140,24 @@
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\aberration.fs" />
+    <None Include="data\blur.fs" />
+    <None Include="data\centroid.fs" />
+    <None Include="data\depth.fs" />
+    <None Include="data\depth.vs" />
+    <None Include="data\emboss.fs" />
+    <None Include="data\grayscale.fs" />
+    <None Include="data\inverse.fs" />
+    <None Include="data\normal.fs" />
+    <None Include="data\posteffect.vs" />
+    <None Include="data\sepia.fs" />
+    <None Include="data\shadowmap.fs" />
+    <None Include="data\shadowmap.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\texture.tga" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

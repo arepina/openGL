@@ -10,8 +10,3 @@ d:\opengl\opengl_7\opengl_7\opengl.cpp:OpenGLPrintDebugInfo:33 DEBUG GL_MAX_TEXT
 d:\opengl\opengl_7\opengl_7\opengl.cpp:OpenGLPrintDebugInfo:34 DEBUG GL_MAX_COLOR_ATTACHMENTS = 8
 d:\opengl\opengl_7\opengl_7\opengl.cpp:OpenGLPrintDebugInfo:35 DEBUG GL_MIN_PROGRAM_TEXEL_OFFSET = -8
 d:\opengl\opengl_7\opengl_7\opengl.cpp:OpenGLPrintDebugInfo:36 DEBUG GL_MAX_PROGRAM_TEXEL_OFFSET = 7
-d:\opengl\opengl_7\opengl_7\shader.cpp:ShaderStatus:55 ERROR Shader: FLEX: Unknown char ï
-ERROR: 1:1: 'ï' : syntax error syntax error
-
-
-d:\opengl\opengl_7\opengl_7\shader.cpp:ShaderProgramCreateFromFile:108 ERROR Fail to compile 'data/depth.vert'

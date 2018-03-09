@@ -15,7 +15,7 @@
 
 // вспомогательный макрос
 #define LOAD_SHADER(name) \
-	ShaderProgramCreateFromFile("data/" name ".vert", "data/" name ".frag")
+	ShaderProgramCreateFromFile("data/" name ".vs", "data/" name ".fs")
 
 // структура описания пост-эффекта
 struct Posteffect
@@ -45,27 +45,32 @@ static GLuint depthFBO = 0, posteffectFBO = 0;
 static GLuint fsqVAO = 0, fsqVBO = 0;
 
 // положение курсора и его смещение с последнего кадра
-static int cursorPos[2] = {0,0}, rotateDelta[2] = {0,0}, moveDelta[2] = {0,0};
+static int cursorPos[2] = { 0,0 }, rotateDelta[2] = { 0,0 }, moveDelta[2] = { 0,0 };
 
-static const uint32_t meshCount = 3;
+static const uint32_t meshCount = 4;
 static Mesh           meshes[meshCount];
 static Material       materials[meshCount];
 
-static float3 torusRotation = {0.0f, 0.0f, 0.0f};
+static float3 torusRotation = { 0.0f, 0.0f, 0.0f };
 
 static Light  directionalLight;
 static Camera mainCamera, lightCamera;
 
 // пост-эффекты 
-static const uint32_t posteffectsCount = 7;
+static const uint32_t posteffectsCount = 12;
 static Posteffect posteffects[posteffectsCount] = {
-	{VK_F1, "data/normal.frag",     0},
-	{VK_F2, "data/grayscale.frag",  0},
-	{VK_F3, "data/sepia.frag",      0},
-	{VK_F4, "data/inverse.frag",    0},
-	{VK_F5, "data/blur.frag",       0},
-	{VK_F6, "data/emboss.frag",     0},
-	{VK_F7, "data/aberration.frag", 0}
+	{VK_F1, "data/normal.fs",     0},
+	{VK_F2, "data/grayscale.fs",  0},
+	{VK_F3, "data/sepia.fs",      0},
+	{VK_F4, "data/inverse.fs",    0},
+	{VK_F5, "data/blur.fs",       0},
+	{VK_F6, "data/emboss.fs",     0},
+	{VK_F7, "data/aberration.fs", 0},
+	{VK_F8, "data/aberration.fs", 0 },
+	{VK_F9, "data/aberration.fs", 0 },
+	{VK_F10, "data/aberration.fs", 0 },
+	{VK_F11, "data/aberration.fs", 0 },
+	{VK_F12, "data/aberration.fs", 0 }
 };
 
 // вершины полноэкранного прямоугольника
@@ -103,7 +108,7 @@ bool GLWindowInit(const GLWindow &window)
 
 	for (uint32_t p = 0; p < posteffectsCount; ++p)
 	{
-		posteffects[p].program = ShaderProgramCreateFromFile("data/posteffect.vert", posteffects[p].shader);
+		posteffects[p].program = ShaderProgramCreateFromFile("data/posteffect.vs", posteffects[p].shader);
 
 		if (posteffects[p].program == 0)
 			return false;
@@ -150,6 +155,14 @@ bool GLWindowInit(const GLWindow &window)
 	materials[2].specular.set(0.8f, 0.8f, 0.8f, 1.0f);
 	materials[2].shininess = 20.0f;
 
+	// куб
+	MeshCreateCube(meshes[3], vec3(10.0f, 0.f, 0.0f), 1.0f);
+	MaterialDefault(materials[3]);
+	materials[3].texture = colorTexture;
+	materials[3].diffuse.set(1.0f, 0.5f, 0.3f, 1.0f);
+	materials[3].specular.set(0.8f, 0.8f, 0.8f, 1.0f);
+	materials[3].shininess = 20.0f;
+
 	// создадим и настроим камеру
 	const float aspectRatio = (float)window.width / (float)window.height;
 	CameraLookAt(mainCamera, vec3(-5.0f, 10.0f, 10.0f), vec3_zero, vec3_y);
@@ -188,8 +201,8 @@ bool GLWindowInit(const GLWindow &window)
 	glBindFramebuffer(GL_FRAMEBUFFER, posteffectFBO);
 
 	// присоединяем текстуры к FBO
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, posteffectTexture,      0);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,  posteffectDepthTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, posteffectTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, posteffectDepthTexture, 0);
 
 	// проверим текущий FBO на корректность
 	if ((fboStatus = glCheckFramebufferStatus(GL_FRAMEBUFFER)) != GL_FRAMEBUFFER_COMPLETE)
@@ -294,7 +307,7 @@ void GLWindowRender(const GLWindow &window)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	RenderScene(shadowmapProgram, mainCamera);
-	
+
 	// устанавливаем дефолтный FBO активным
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -81,4 +81,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\depth.fs" />
+    <None Include="data\depth.vs" />
+    <None Include="data\emboss.fs" />
+    <None Include="data\grayscale.fs" />
+    <None Include="data\inverse.fs" />
+    <None Include="data\normal.fs" />
+    <None Include="data\posteffect.vs" />
+    <None Include="data\sepia.fs" />
+    <None Include="data\shadowmap.fs" />
+    <None Include="data\shadowmap.vs" />
+    <None Include="data\aberration.fs" />
+    <None Include="data\blur.fs" />
+    <None Include="data\centroid.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\texture.tga" />
+  </ItemGroup>
 </Project>
